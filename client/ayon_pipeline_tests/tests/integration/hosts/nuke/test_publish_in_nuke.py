@@ -37,7 +37,7 @@ class TestPublishInNuke(NukeLocalPublishTestClass):
         to True and check `test_ayon.logs` collection.
     """
     TEST_FILES = [
-        ("test_publish_in_nuke", "", "")
+        ("resources/test_publish_in_nuke.zip", "test_publish_in_nuke.zip", "")
     ]
 
     APP_GROUP = "nuke"
