@@ -10,10 +10,10 @@ and "automated" one.
 
 How to run
 ----------
-- activate `{OPENPYPE_ROOT}/.venv`
+- activate `{AYON_ROOT}/.venv`
 - run in cmd
-`{OPENPYPE_ROOT}/.venv/Scripts/python.exe {OPENPYPE_ROOT}/start.py runtests {OPENPYPE_ROOT}/tests/integration`
-  - add `hosts/APP_NAME` after integration part to limit only on specific app (eg. `{OPENPYPE_ROOT}/tests/integration/hosts/maya`)
+`{AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py runtests {AYON_ROOT}/tests/integration`
+  - add `hosts/APP_NAME` after integration part to limit only on specific app (eg. `{AYON_ROOT}/tests/integration/hosts/maya`)
 
 OR can use built executables
 `openpype_console runtests {ABS_PATH}/tests/integration`
@@ -30,22 +30,12 @@ Command line arguments
  - "--setup_only" - "Only create dbs, do not run tests",
  - "--mongo_url" - "MongoDB for testing.",
  - "--dump_databases" - ("json"|"bson") export database in expected format after successful test (to output folder in temp location - which is made persistent by this, must be cleared manually)
-Run Tray for test
------------------
-In case of failed test you might want to run it manually and visually debug what happened.
-For that:
-- run tests that is failing
-- add environment variables (to command line process or your IDE)
-  - OPENPYPE_DATABASE_NAME = openpype_tests
-  - AVALON_DB = avalon_tests
-- run tray as usual
-  - `{OPENPYPE_ROOT}/.venv/Scripts/python.exe {OPENPYPE_ROOT}/start.py run tray --debug`
 
 You should see only test asset and state of databases for that particular use case.
 
 How to check logs/errors from app
 --------------------------------
-Keep PERSIST to True in the class and check `test_openpype.logs` collection.
+Keep PERSIST to True in the class and check `test_ayon.logs` collection.
 
 How to create test for publishing from host
 ------------------------------------------

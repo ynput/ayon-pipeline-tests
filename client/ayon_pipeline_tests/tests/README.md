@@ -22,15 +22,15 @@ Structure:
 
 How to run:
 ----------
-- use Openpype command 'runtests' from command line (`.venv` in ${OPENPYPE_ROOT} must be activated to use configured Python!)
--- `python ${OPENPYPE_ROOT}/start.py runtests`
+- use Openpype command 'runtests' from command line (`.venv` in ${AYON_ROOT} must be activated to use configured Python!)
+-- `python ${AYON_ROOT}/start.py runtests`
 
-By default, this command will run all tests in ${OPENPYPE_ROOT}/tests.
+By default, this command will run all tests in ${AYON_ROOT}/tests.
 
-Specific location could be provided to this command as an argument, either as absolute path, or relative path to ${OPENPYPE_ROOT}.
-(eg. `python ${OPENPYPE_ROOT}/start.py start.py runtests ../tests/integration`) will trigger only tests in `integration` folder.
+Specific location could be provided to this command as an argument, either as absolute path, or relative path to ${AYON_ROOT}.
+(eg. `python ${AYON_ROOT}/start.py start.py runtests ../tests/integration`) will trigger only tests in `integration` folder.
 
-See `${OPENPYPE_ROOT}/cli.py:runtests` for other arguments.
+See `${AYON_ROOT}/cli.py:runtests` for other arguments.
 
 Run in IDE:
 -----------
