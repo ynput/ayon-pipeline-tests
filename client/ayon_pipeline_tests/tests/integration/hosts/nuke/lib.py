@@ -2,7 +2,7 @@ import os
 import pytest
 import re
 
-from tests.lib.testing_classes import (
+from ayon_pipeline_tests.tests.lib.testing_classes import (
     HostFixtures,
     PublishTest,
     DeadlinePublishTest
@@ -22,7 +22,7 @@ class NukeHostFixtures(HostFixtures):
                                 source_file_name)
         dest_folder = os.path.join(output_folder_url,
                                    self.PROJECT,
-                                   self.ASSET,
+                                   self.FOLDER_PATH.strip("/"),
                                    "work",
                                    self.TASK)
         if not os.path.exists(dest_folder):

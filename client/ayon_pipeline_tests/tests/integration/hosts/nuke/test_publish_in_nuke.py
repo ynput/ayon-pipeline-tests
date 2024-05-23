@@ -1,7 +1,9 @@
 import logging
 
-from tests.lib.assert_classes import DBAssert
-from tests.integration.hosts.nuke.lib import NukeLocalPublishTestClass
+import ayon_api
+
+from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
+from ayon_pipeline_tests.tests.integration.hosts.nuke.lib import NukeLocalPublishTestClass
 
 log = logging.getLogger("test_publish_in_nuke")
 
@@ -27,16 +29,15 @@ class TestPublishInNuke(NukeLocalPublishTestClass):
         Checks tmp folder if all expected files were published.
 
         How to run:
-        (in cmd with activated {OPENPYPE_ROOT}/.venv)
-        {OPENPYPE_ROOT}/.venv/Scripts/python.exe {OPENPYPE_ROOT}/start.py
+        (in cmd with activated {AYON_ROOT}/.venv)
+        {AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py
         runtests ../tests/integration/hosts/nuke  # noqa: E501
 
         To check log/errors from launched app's publish process keep PERSIST
-        to True and check `test_openpype.logs` collection.
+        to True and check `test_ayon.logs` collection.
     """
-    # https://drive.google.com/file/d/1SUurHj2aiQ21ZIMJfGVBI2KjR8kIjBGI/view?usp=sharing  # noqa: E501
     TEST_FILES = [
-        ("1SUurHj2aiQ21ZIMJfGVBI2KjR8kIjBGI", "test_Nuke_publish.zip", "")
+        ("test_publish_in_nuke", "", "")
     ]
 
     APP_GROUP = "nuke"
@@ -53,46 +54,69 @@ class TestPublishInNuke(NukeLocalPublishTestClass):
         """Host and input data dependent expected results in DB."""
         print("test_db_asserts")
         failures = []
+        project_name = self.PROJECT
 
-        failures.append(DBAssert.count_of_types(dbcon, "version", 2))
+        versions = ayon_api.get_versions(project_name)
 
+        not_first_version = [version
+                             for version in versions
+                             if version["version"] != 1]
         failures.append(
-            DBAssert.count_of_types(dbcon, "version", 0, name={"$ne": 1}))
+            DBAssert.count_compare(
+                "versions",
+                not_first_version,
+                0
+            )
+        )
+        products = ayon_api.get_products(project_name)
+        failures.append(DBAssert.count_compare("products", products, 2))
 
-        failures.append(
-            DBAssert.count_of_types(dbcon, "subset", 1,
-                                    name="renderTest_taskMain"))
+        products = ayon_api.get_products(project_name,
+                                         product_names=["renderTest_taskMain"])
+        failures.append(DBAssert.count_compare("render products", products, 1))
 
+        products = ayon_api.get_products(project_name,
+                                         product_names=["workfileTest_task"])
         failures.append(
-            DBAssert.count_of_types(dbcon, "subset", 1,
-                                    name="workfileTest_task"))
+            DBAssert.count_compare("workfile products", products, 1))
 
+        representations = list(ayon_api.get_representations(project_name))
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 3))
+            DBAssert.count_compare(
+                "representations",
+                representations,
+                3
+            )
+        )
 
-        additional_args = {"context.subset": "workfileTest_task",
-                           "context.ext": "nk"}
+        workfile_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "workfileTest_task" and
+               repre["context"]["ext"] == "nk"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("workfile representations", workfile_repres,
+                                   1))
 
-        additional_args = {"context.subset": "renderTest_taskMain",
-                           "context.ext": "exr"}
+        render_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "renderTest_taskMain" and
+               repre["context"]["ext"] == "exr"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("render representations", render_repres, 1))
 
-        additional_args = {"context.subset": "renderTest_taskMain",
-                           "name": "thumbnail"}
+        thumb_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "renderTest_taskMain" and
+               repre["name"] == "thumbnail"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 0,
-                                    additional_args=additional_args))
-
-        additional_args = {"context.subset": "renderTest_taskMain",
-                           "name": "h264_mov"}
-        failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("thumbnail representations", thumb_repres,
+                                   1))
 
         assert not any(failures)
 

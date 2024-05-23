@@ -1,7 +1,7 @@
 import logging
 
-from tests.lib.assert_classes import DBAssert
-from tests.integration.hosts.nuke.lib import NukeDeadlinePublishTestClass
+from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
+from ayon_pipeline_tests.tests.integration.hosts.nuke.lib import NukeDeadlinePublishTestClass
 
 log = logging.getLogger("test_publish_in_nuke")
 
@@ -29,12 +29,12 @@ class TestDeadlinePublishInNukePrerender(NukeDeadlinePublishTestClass):
         Checks tmp folder if all expected files were published.
 
         How to run:
-        (in cmd with activated {OPENPYPE_ROOT}/.venv)
-        {OPENPYPE_ROOT}/.venv/Scripts/python.exe {OPENPYPE_ROOT}/start.py
+        (in cmd with activated {AYON_ROOT}/.venv)
+        {AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py
         runtests ../tests/integration/hosts/nuke  # noqa: E501
 
         To check log/errors from launched app's publish process keep PERSIST
-        to True and check `test_openpype.logs` collection.
+        to True and check `test_ayon.logs` collection.
     """
     TEST_FILES = [
         ("1aQaKo3cF-fvbTfvODIRFMxgherjbJ4Ql",

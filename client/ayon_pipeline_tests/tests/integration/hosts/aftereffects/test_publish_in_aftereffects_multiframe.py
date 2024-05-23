@@ -1,7 +1,7 @@
 import logging
 
-from tests.lib.assert_classes import DBAssert
-from tests.integration.hosts.aftereffects.lib import AELocalPublishTestClass
+from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
+from ayon_pipeline_tests.tests.integration.hosts.aftereffects.lib import AELocalPublishTestClass
 
 log = logging.getLogger("test_publish_in_aftereffects")
 

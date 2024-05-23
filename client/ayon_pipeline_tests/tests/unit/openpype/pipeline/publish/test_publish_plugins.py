@@ -18,7 +18,7 @@ import pytest
 import shutil
 import logging
 
-from tests.unit.openpype.pipeline.lib import TestPipeline
+from ayon_pipeline_tests.tests.unit.openpype.pipeline.lib import TestPipeline
 from openpype.pipeline.publish import publish_plugins
 from openpype.pipeline import colorspace
 
@@ -107,7 +107,7 @@ class TestPipelinePublishPlugins(TestPipeline):
             output_folder_url,
             self.PROJECT,
             self.HIERARCHY,
-            self.ASSET,
+            self.FOLDER_PATH,
             "config"
         )
         dest_path = os.path.join(

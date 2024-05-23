@@ -18,8 +18,8 @@ import logging
 
 from pyblish.api import Instance as PyblishInstance
 
-from tests.lib.testing_classes import BaseTest
-from openpype.hosts.unreal.plugins.publish.validate_sequence_frames import (
+from ayon_pipeline_tests.tests.lib.testing_classes import BaseTest
+from ayon_core.hosts.unreal.plugins.publish.validate_sequence_frames import (
     ValidateSequenceFrames
 )
 

@@ -1,8 +1,8 @@
 import re
 import os
 
-from tests.lib.assert_classes import DBAssert
-from tests.integration.hosts.maya.lib import MayaLocalPublishTestClass
+from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
+from ayon_pipeline_tests.tests.integration.hosts.maya.lib import MayaLocalPublishTestClass
 
 
 class TestPublishInMaya(MayaLocalPublishTestClass):
@@ -22,8 +22,8 @@ class TestPublishInMaya(MayaLocalPublishTestClass):
         Checks tmp folder if all expected files were published.
 
         How to run:
-        (in cmd with activated {OPENPYPE_ROOT}/.venv)
-        {OPENPYPE_ROOT}/.venv/Scripts/python.exe {OPENPYPE_ROOT}/start.py runtests ../tests/integration/hosts/maya  # noqa: E501
+        (in cmd with activated {AYON_ROOT}/.venv)
+        {AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py runtests ../tests/integration/hosts/maya  # noqa: E501
 
     """
     PERSIST = False

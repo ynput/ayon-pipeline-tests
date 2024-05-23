@@ -2,7 +2,7 @@ import os
 import pytest
 import shutil
 
-from tests.lib.testing_classes import (
+from ayon_pipeline_tests.tests.lib.testing_classes import (
     HostFixtures,
     PublishTest,
     DeadlinePublishTest
@@ -25,7 +25,7 @@ class MayaHostFixtures(HostFixtures):
         dest_folder = os.path.join(
             output_folder_url,
             self.PROJECT,
-            self.ASSET,
+            self.FOLDER_PATH.strip("/"),
             "work",
             self.TASK
         )

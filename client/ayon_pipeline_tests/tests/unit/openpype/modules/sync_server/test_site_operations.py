@@ -14,7 +14,7 @@
 import pytest
 from bson.objectid import ObjectId
 
-from tests.lib.testing_classes import ModuleUnitTest
+from ayon_pipeline_tests.tests.lib.testing_classes import ModuleUnitTest
 
 from openpype.modules.sync_server.utils import SiteAlreadyPresentError
 
