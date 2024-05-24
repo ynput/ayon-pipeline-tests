@@ -185,9 +185,10 @@ class ModuleUnitTest(BaseTest):
                 self.TEST_DB_NAME, output_dir, format=dump_databases
             )
 
-        persist = persist or self.PERSIST or self.is_test_failed(request)
-        if not persist:
-            db_handler.teardown(self.TEST_DB_NAME)
+        # TODO temporarily, projectimport doesn't handle non existent project
+        # persist = persist or self.PERSIST or self.is_test_failed(request)
+        # if not persist:
+        #     db_handler.teardown(self.TEST_DB_NAME)
 
     def is_test_failed(self, request):
         return getattr(request.node, "module_test_failure", False)
@@ -415,7 +416,7 @@ class PublishTest(ModuleUnitTest):
 class DeadlinePublishTest(PublishTest):
     @pytest.fixture(scope="module")
     def publish_finished(self, launched_app, download_test_data,
-                         timeout):
+                         timeout, db_setup):
         """Dummy fixture waiting for publish to finish"""
         import time
         time_start = time.time()
