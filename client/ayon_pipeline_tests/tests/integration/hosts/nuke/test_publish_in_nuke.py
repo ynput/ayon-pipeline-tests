@@ -50,7 +50,7 @@ class TestPublishInNuke(NukeLocalPublishTestClass):
     PERSIST = False  # True - keep test_db, test_openpype, outputted test files
     TEST_DATA_FOLDER = None
 
-    def test_db_asserts(self, dbcon, publish_finished):
+    def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
         print("test_db_asserts")
         failures = []
