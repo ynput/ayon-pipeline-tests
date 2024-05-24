@@ -44,8 +44,6 @@ class ModuleUnitTest(BaseTest):
             env_var - sets env vars from input file
             db_setup - prepares avalon AND openpype DBs for testing from
                         binary dumps from input data
-            dbcon - returns DBConnection to AvalonDB
-            dbcon_openpype - returns DBConnection for OpenpypeMongoDB
 
     """
     PERSIST = False  # True to not purge temporary folder nor test DB
@@ -190,16 +188,6 @@ class ModuleUnitTest(BaseTest):
         persist = persist or self.PERSIST or self.is_test_failed(request)
         if not persist:
             db_handler.teardown(self.TEST_DB_NAME)
-
-    @pytest.fixture(scope="module")
-    def dbcon(self, db_setup, output_folder_url):
-        """Provide test database connection.
-
-            Database prepared from dumps with 'db_setup' fixture.
-        """
-        # set project root to temp folder
-        platform_str = platform.system().lower()
-        root_key = "config.roots.work.{}".format(platform_str)
 
     def is_test_failed(self, request):
         return getattr(request.node, "module_test_failure", False)
