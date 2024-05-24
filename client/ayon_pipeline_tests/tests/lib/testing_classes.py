@@ -125,7 +125,7 @@ class ModuleUnitTest(BaseTest):
         yield path
 
     @pytest.fixture(scope="module")
-    def env_var(self, monkeypatch_session, download_test_data, mongo_url):
+    def env_var(self, monkeypatch_session, download_test_data):
         """Sets temporary env vars from json file."""
         env_url = os.path.join(download_test_data, "input",
                                "env_vars", "env_var.json")
@@ -168,8 +168,8 @@ class ModuleUnitTest(BaseTest):
 
     @pytest.fixture(scope="module")
     def db_setup(self, download_test_data, env_var, monkeypatch_session,
-                 request, mongo_url, dump_databases, persist):
-        """Restore prepared MongoDB dumps into selected DB."""
+                 request, dump_databases, persist):
+        """Restore prepared Postgre dumps into selected DB."""
         backup_dir = os.path.join(download_test_data, "input", "dumps")
         db_handler = DBHandler()
         db_handler.setup_from_dump(self.TEST_DB_NAME, backup_dir,
@@ -456,8 +456,9 @@ class DeadlinePublishTest(PublishTest):
         deadline_job_id = job_info["deadline_publish_job_id"]
 
         manager = AddonsManager()
-        deadline_module = manager.modules_by_name["deadline"]
-        deadline_url = deadline_module.deadline_urls["default"]
+        deadline_module = manager.addons_by_name["deadline"]
+        deadline_url = (deadline_module.deadline_servers_info["default"]
+                                                             ["value"])
 
         if not deadline_url:
             raise ValueError("Must have default deadline url.")
