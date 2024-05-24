@@ -1,7 +1,11 @@
 import logging
 
+import ayon_api
+
 from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
-from ayon_pipeline_tests.tests.integration.hosts.nuke.lib import NukeDeadlinePublishTestClass
+from ayon_pipeline_tests.tests.integration.hosts.nuke.lib import (
+    NukeDeadlinePublishTestClass
+)
 
 log = logging.getLogger("test_publish_in_nuke")
 
@@ -9,36 +13,36 @@ log = logging.getLogger("test_publish_in_nuke")
 class TestDeadlinePublishInNukePrerender(NukeDeadlinePublishTestClass):
     """Basic test case for publishing in Nuke and Deadline for prerender
 
-        It is different from `test_deadline_publish_in_nuke` as that one is for
-        `render` family >> this test expects different subset names.
+    It is different from `test_deadline_publish_in_nuke` as that one is for
+    `render` family >> this test expects different product names.
 
-        Uses generic TestCase to prepare fixtures for test data, testing DBs,
-        env vars.
+    Uses generic TestCase to prepare fixtures for test data, testing DBs,
+    env vars.
 
-        !!!
-        It expects path in WriteNode starting with 'c:/projects', it replaces
-        it with correct value in temp folder.
-        Access file path by selecting WriteNode group, CTRL+Enter, update file
-        input
-        !!!
+    !!!
+    It expects path in WriteNode starting with 'c:/projects', it replaces
+    it with correct value in temp folder.
+    Access file path by selecting WriteNode group, CTRL+Enter, update file
+    input
+    !!!
 
-        Opens Nuke, run publish on prepared workile.
+    Opens Nuke, run publish on prepared workile.
 
-        Then checks content of DB (if subset, version, representations were
-        created.
-        Checks tmp folder if all expected files were published.
+    Then checks content of DB (if product, version, representations were
+    created.
+    Checks tmp folder if all expected files were published.
 
-        How to run:
-        (in cmd with activated {AYON_ROOT}/.venv)
-        {AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py
-        runtests ../tests/integration/hosts/nuke  # noqa: E501
+    How to run:
+    (in cmd with activated {AYON_ROOT}/.venv)
+    {AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py
+    runtests ../tests/integration/hosts/nuke  # noqa: E501
 
-        To check log/errors from launched app's publish process keep PERSIST
-        to True and check `test_ayon.logs` collection.
+    To check log/errors from launched app's publish process keep PERSIST
+    to True and check `test_ayon.logs` collection.
     """
     TEST_FILES = [
-        ("1aQaKo3cF-fvbTfvODIRFMxgherjbJ4Ql",
-         "test_nuke_deadline_publish_in_nuke_prerender.zip", "")
+        ("resources/test_deadline_publish_in_nuke_prerender.zip",
+         "test_deadline_publish_in_nuke_prerender.zip", "")
     ]
 
     APP_GROUP = "nuke"
@@ -51,53 +55,73 @@ class TestDeadlinePublishInNukePrerender(NukeDeadlinePublishTestClass):
     PERSIST = False  # True - keep test_db, test_openpype, outputted test files
     TEST_DATA_FOLDER = None
 
-    def test_db_asserts(self, dbcon, publish_finished):
+    def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
         print("test_db_asserts")
+        project_name = "test_project"
         failures = []
 
-        failures.append(DBAssert.count_of_types(dbcon, "version", 2))
+        versions = ayon_api.get_versions(project_name)
 
+        not_first_version = [version
+                             for version in versions
+                             if version["version"] != 1]
         failures.append(
-            DBAssert.count_of_types(dbcon, "version", 0, name={"$ne": 1}))
+            DBAssert.count_compare(
+                "versions",
+                not_first_version,
+                0
+            )
+        )
+        products = ayon_api.get_products(project_name)
+        failures.append(DBAssert.count_compare("products", products, 2))
 
-        # prerender has only default subset format `{family}{variant}`,
-        # Key01 is used variant
-        failures.append(
-            DBAssert.count_of_types(dbcon, "subset", 1,
-                                    name="prerenderKey01"))
+        products = ayon_api.get_products(project_name,
+                                         product_names=["prerenderKey01"])
+        failures.append(DBAssert.count_compare("render products", products, 1))
 
+        products = ayon_api.get_products(project_name,
+                                         product_names=["workfileTest_task"])
         failures.append(
-            DBAssert.count_of_types(dbcon, "subset", 1,
-                                    name="workfileTest_task"))
+            DBAssert.count_compare("workfile products", products, 1))
 
+        representations = list(ayon_api.get_representations(project_name))
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 2))
+            DBAssert.count_compare(
+                "representations",
+                representations,
+                2
+            )
+        )
 
-        additional_args = {"context.subset": "workfileTest_task",
-                           "context.ext": "nk"}
+        workfile_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "workfileTest_task" and
+               repre["context"]["ext"] == "nk"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("workfile representations", workfile_repres,
+                                   1))
 
-        additional_args = {"context.subset": "prerenderKey01",
-                           "context.ext": "exr"}
+        render_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "prerenderKey01" and
+               repre["context"]["ext"] == "exr"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("render representations", render_repres, 1))
 
-        # prerender doesn't have set creation of review by default
-        additional_args = {"context.subset": "prerenderKey01",
-                           "name": "thumbnail"}
+        thumb_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "prerenderKey01" and
+               repre["name"] == "thumbnail"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 0,
-                                    additional_args=additional_args))
-
-        additional_args = {"context.subset": "prerenderKey01",
-                           "name": "h264_mov"}
-        failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 0,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("thumbnail representations", thumb_repres,
+                                   0))
 
         assert not any(failures)
 
