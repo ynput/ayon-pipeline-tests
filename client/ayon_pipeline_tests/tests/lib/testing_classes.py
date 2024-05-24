@@ -295,6 +295,7 @@ class PublishTest(ModuleUnitTest):
     @pytest.fixture(scope="module")
     def launched_app(
         self,
+        startup_scripts,  # must stay here to load launch scripts
         download_test_data,
         last_workfile_path,
         app_args, app_name,
