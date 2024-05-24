@@ -13,8 +13,6 @@ import re
 import inspect
 import time
 
-from ayon_pipeline_tests.tests.lib.db_handler import DBHandler
-from ayon_pipeline_tests.tests.lib.file_handler import RemoteFileHandler, LocalFileHandler
 from ayon_core.addon import AddonsManager
 from ayon_core.settings import get_project_settings
 from ayon_api import (
@@ -22,9 +20,14 @@ from ayon_api import (
     get_folder_by_path,
     get_task_by_name,
     get_project,
-    get_project_anatomy_presets
 )
 from ayon_core.pipeline import Anatomy
+
+from ayon_pipeline_tests.tests.lib.db_handler import DBHandler
+from ayon_pipeline_tests.tests.lib.file_handler import (
+    RemoteFileHandler,
+    LocalFileHandler
+)
 
 
 class BaseTest:
@@ -34,16 +37,15 @@ class BaseTest:
 class ModuleUnitTest(BaseTest):
     """Generic test class for testing modules
 
-        Use PERSIST==True to keep temporary folder and DB prepared for
-        debugging or preparation of test files.
+    Use PERSIST==True to keep temporary folder and DB prepared for
+    debugging or preparation of test files.
 
-        Implemented fixtures:
-            monkeypatch_session - fixture for env vars with session scope
-            project_settings - fixture for project settings with session scope
-            download_test_data - tmp folder with extracted data from GDrive
-            env_var - sets env vars from input file
-            db_setup - prepares avalon AND openpype DBs for testing from
-                        binary dumps from input data
+    Implemented fixtures:
+        monkeypatch_session - fixture for env vars with session scope
+        project_settings - fixture for project settings with session scope
+        download_test_data - tmp folder with extracted data from GDrive
+        env_var - sets env vars from input file
+        db_setup - prepares DB for testing from sql dumps from input data
 
     """
     PERSIST = False  # True to not purge temporary folder nor test DB
@@ -165,8 +167,15 @@ class ModuleUnitTest(BaseTest):
         monkeypatch_session.setenv("TEST_SOURCE_FOLDER", download_test_data)
 
     @pytest.fixture(scope="module")
-    def db_setup(self, download_test_data, env_var, monkeypatch_session,
-                 request, dump_databases, persist):
+    def db_setup(
+            self,
+            download_test_data,
+            env_var,
+            monkeypatch_session,
+            request,
+            dump_databases,
+            persist
+    ):
         """Restore prepared Postgre dumps into selected DB."""
         backup_dir = os.path.join(download_test_data, "input", "dumps")
         db_handler = DBHandler()
@@ -207,22 +216,22 @@ class ModuleUnitTest(BaseTest):
 class PublishTest(ModuleUnitTest):
     """Test class for publishing in hosts.
 
-        Implemented fixtures:
-            launched_app - launches APP with last_workfile_path
-            publish_finished - waits until publish is finished, host must
-                kill its process when finished publishing. Includes timeout
-                which raises ValueError
+    Implemented fixtures:
+        launched_app - launches APP with last_workfile_path
+        publish_finished - waits until publish is finished, host must
+            kill its process when finished publishing. Includes timeout
+            which raises ValueError
 
-        Not implemented:
-            last_workfile_path - returns path to testing workfile
-            startup_scripts - provide script for setup in host
+    Not implemented:
+        last_workfile_path - returns path to testing workfile
+        startup_scripts - provide script for setup in host
 
-        Implemented tests:
-            test_folder_structure_same - compares published and expected
-                subfolders if they contain same files. Compares only on file
-                presence
+    Implemented tests:
+        test_folder_structure_same - compares published and expected
+            subfolders if they contain same files. Compares only on file
+            presence
 
-            TODO: implement test on file size, file content
+        TODO: implement test on file size, file content
     """
 
     APP_GROUP = ""
@@ -234,7 +243,7 @@ class PublishTest(ModuleUnitTest):
 
     # keep empty to locate latest installed variant or explicit
     APP_VARIANT = ""
-    PERSIST = True  # True - keep test_db, test_openpype, outputted test files
+    PERSIST = True  # True - keep test DB, outputted test files
     TEST_DATA_FOLDER = None  # use specific folder of unzipped test file
 
     SETUP_ONLY = False
@@ -284,9 +293,14 @@ class PublishTest(ModuleUnitTest):
         yield app_args
 
     @pytest.fixture(scope="module")
-    def launched_app(self, download_test_data, last_workfile_path,
-                     startup_scripts, app_args, app_name, output_folder_url,
-                     setup_only):
+    def launched_app(
+        self,
+        download_test_data,
+        last_workfile_path,
+        app_args, app_name,
+        output_folder_url,
+        setup_only
+    ):
         """Launch host app"""
         if setup_only or self.SETUP_ONLY:
             print("Creating only setup for test, not launching app")
@@ -325,8 +339,13 @@ class PublishTest(ModuleUnitTest):
         yield app_process
 
     @pytest.fixture(scope="module")
-    def publish_finished(self,  launched_app, download_test_data,
-                         timeout, setup_only):
+    def publish_finished(
+        self,
+        launched_app,
+        download_test_data,
+        timeout,
+        setup_only
+    ):
         """Dummy fixture waiting for publish to finish"""
         if setup_only or self.SETUP_ONLY:
             print("Creating only setup for test, not launching app")
@@ -346,13 +365,17 @@ class PublishTest(ModuleUnitTest):
         print("Publish finished")
         yield True
 
-    def test_folder_structure_same(self, publish_finished,
-                                   download_test_data, output_folder_url,
-                                   skip_compare_folders,
-                                   setup_only):
+    def test_folder_structure_same(
+        self,
+        publish_finished,
+        download_test_data,
+        output_folder_url,
+        skip_compare_folders,
+        setup_only
+    ):
         """Check if expected and published subfolders contain same files.
 
-            Compares only presence, not size nor content!
+        Compares only presence, not size nor content!
         """
         if setup_only or self.SETUP_ONLY:
             print("Creating only setup for test, not launching app")
@@ -415,8 +438,13 @@ class PublishTest(ModuleUnitTest):
 
 class DeadlinePublishTest(PublishTest):
     @pytest.fixture(scope="module")
-    def publish_finished(self, launched_app, download_test_data,
-                         timeout, db_setup):
+    def publish_finished(
+            self,
+            launched_app,
+            download_test_data,
+            timeout,
+            db_setup
+    ):
         """Dummy fixture waiting for publish to finish"""
         import time
         time_start = time.time()
