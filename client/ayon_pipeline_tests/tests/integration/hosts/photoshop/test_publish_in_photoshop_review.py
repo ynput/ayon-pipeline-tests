@@ -1,7 +1,11 @@
 import logging
 
+import ayon_api
+
 from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
-from ayon_pipeline_tests.tests.integration.hosts.photoshop.lib import PhotoshopTestClass
+from ayon_pipeline_tests.tests.integration.hosts.photoshop.lib import (
+    PhotoshopTestClass
+)
 
 log = logging.getLogger("test_publish_in_photoshop")
 
@@ -24,8 +28,8 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
     PERSIST = True
 
     TEST_FILES = [
-        ("12WGbNy9RJ3m9jlnk0Ib9-IZmONoxIz_p",
-         "test_photoshop_publish_review.zip", "")
+        ("resources/test_publish_in_photoshop_review.zip",
+         "test_publish_in_photoshop_review.zip", "")
     ]
 
     APP_GROUP = "photoshop"
@@ -36,73 +40,142 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
 
     TIMEOUT = 120  # publish timeout
 
-    def test_db_asserts(self, dbcon, publish_finished):
+    def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
         print("test_db_asserts")
+        project_name = self.PROJECT
         failures = []
 
-        failures.append(DBAssert.count_of_types(dbcon, "version", 3))
+        versions = ayon_api.get_versions(project_name)
+        failures.append(DBAssert.count_compare("versions", versions, 4))
 
+        not_first_version = [version
+                             for version in versions
+                             if version["version"] != 1]
         failures.append(
-            DBAssert.count_of_types(dbcon, "version", 0, name={"$ne": 1}))
+            DBAssert.count_compare(
+                "not first versions",
+                not_first_version,
+                0
+            )
+        )
+        products = ayon_api.get_products(project_name)
+        failures.append(DBAssert.count_compare("products", products, 3))
 
+        products = ayon_api.get_products(project_name,
+                                         product_names=["imageMainForeground"])
         failures.append(
-            DBAssert.count_of_types(dbcon, "subset", 1,
-                                    name="imageMainForeground"))
+            DBAssert.count_compare(
+                "imageMainForeground products",
+                products,
+                1
+            )
+        )
 
+        products = ayon_api.get_products(project_name,
+                                         product_names=["imageMainBackground"])
         failures.append(
-            DBAssert.count_of_types(dbcon, "subset", 1,
-                                    name="imageMainBackground"))
+            DBAssert.count_compare(
+                "imageMainBackground products",
+                products,
+                1
+            )
+        )
 
+        products = ayon_api.get_products(project_name,
+                                         product_names=["workfileTest_task"])
         failures.append(
-            DBAssert.count_of_types(dbcon, "subset", 1,
-                                    name="workfileTest_task"))
+            DBAssert.count_compare("workfile products", products, 1))
 
+        representations = list(ayon_api.get_representations(project_name))
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 6))
+            DBAssert.count_compare(
+                "representations",
+                representations,
+                6
+            )
+        )
 
-        additional_args = {"context.subset": "imageMainForeground",
-                           "context.ext": "png"}
+        products = ayon_api.get_products(project_name,
+                                         product_names=["review"])
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare(
+                "review products",
+                products,
+                0
+            )
+        )
 
-        additional_args = {"context.subset": "imageMainForeground",
-                           "context.ext": "jpg"}
+        workfile_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "workfileTest_task" and
+               repre["context"]["ext"] == "psd"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 2,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("workfile representations", workfile_repres,
+                                   1))
 
-        additional_args = {"context.subset": "imageMainForeground",
-                           "context.ext": "jpg",
-                           "context.representation": "jpg_jpg"}
+        render_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "imageMainForeground" and
+               repre["context"]["ext"] == "png"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("MainForeground representations",
+                                   render_repres, 1))
 
-        additional_args = {"context.subset": "imageMainBackground",
-                           "context.ext": "png"}
+        render_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "imageMainForeground" and
+               repre["context"]["ext"] == "jpg"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("MainForeground representations",
+                                   render_repres, 1))
 
-        additional_args = {"context.subset": "imageMainBackground",
-                           "context.ext": "jpg"}
+        render_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "imageMainForeground" and
+               repre["context"]["ext"] == "jpg" and
+               repre["context"]["name"] == "jpg_jpg"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("FG review representations", render_repres,
+                                   1))
 
-        additional_args = {"context.subset": "imageMainBackground",
-                           "context.ext": "jpg",
-                           "context.representation": "jpg_jpg"}
+        render_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "imageMainBackground" and
+               repre["context"]["ext"] == "png"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 0,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("MainBackground representations",
+                                   render_repres, 1))
 
-        additional_args = {"context.subset": "review"}
+        render_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "imageMainBackground" and
+               repre["context"]["ext"] == "jpg"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 0,
-                                    additional_args=additional_args))
+            DBAssert.count_compare("MainBackground representations",
+                                   render_repres, 1))
+
+        thumb_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "imageMainForeground" and
+               repre["name"] == "thumbnail"
+        ]
+        failures.append(
+            DBAssert.count_compare("thumbnail representations", thumb_repres,
+                                   0))
 
         assert not any(failures)
 
