@@ -1,14 +1,8 @@
-Automatic tests for OpenPype
+Automatic tests for AYON
 ============================
 
 Requirements:
 ============
-Tests are recreating fresh DB for each run, so `mongorestore`, `mongodump` and `mongoimport` command line tools must be installed and on Path.
-
-You can find intallers here: https://www.mongodb.com/docs/database-tools/installation/installation/
-
-You can test that `mongorestore` is available by running this in console, or cmd:
-```mongorestore --version```
 
 Structure:
 - integration - end to end tests, slow (see README.md in the integration folder for more info)
@@ -20,36 +14,40 @@ Structure:
         - fixture
         - `tests.py`
 
-How to run:
+How to run
 ----------
-- use Openpype command 'runtests' from command line (`.venv` in ${AYON_ROOT} must be activated to use configured Python!)
--- `python ${AYON_ROOT}/start.py runtests`
+- activate `{AYON_ROOT}/.venv`
+- run in cmd
+`{AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py addon pipeline_tests runtests {AYON_ROOT}/tests/integration`
+  - add `hosts/APP_NAME` after integration part to limit only on specific app (eg. `{AYON_ROOT}/tests/integration/hosts/maya`)
 
-By default, this command will run all tests in ${AYON_ROOT}/tests.
-
-Specific location could be provided to this command as an argument, either as absolute path, or relative path to ${AYON_ROOT}.
-(eg. `python ${AYON_ROOT}/start.py start.py runtests ../tests/integration`) will trigger only tests in `integration` folder.
-
-See `${AYON_ROOT}/cli.py:runtests` for other arguments.
+OR can use built executables
+`ayon_console addon pipeline_tests runtests {ABS_PATH}/tests/integration`
 
 Run in IDE:
 -----------
 If you prefer to run/debug single file directly in IDE of your choice, you might encounter issues with imports.
-It would manifest like `KeyError: 'OPENPYPE_DATABASE_NAME'`. That means you are importing module that depends on OP to be running, eg. all expected variables are set.
 
 In some cases your tests might be so localized, that you don't care about all env vars to be set properly.
 In that case you might add this dummy configuration BEFORE any imports in your test file
 ```
 import os
-os.environ["OPENPYPE_DEBUG"] = "1"
-os.environ["OPENPYPE_MONGO"] = "mongodb://localhost:27017"
-os.environ["OPENPYPE_DATABASE_NAME"] = "openpype"
-os.environ["AVALON_DB"] = "avalon"
-os.environ["AVALON_TIMEOUT"] = "3000"
-os.environ["AVALON_ASSET"] = "Asset"
-os.environ["AVALON_PROJECT"] = "test_project"
+os.environ["USE_AYON_SERVER"] = "1"
+os.environ["AYON_SERVER_URL"] = "http://localhost:5000"
+os.environ["AYON_API_KEY"] = "XXXXXX"
+os.environ["AYON_PROJECT_NAME"] = "ayon_test"
+os.environ["AYON_FOLDER_PATH"] = "/assets/characters/characterA"
 ```
-(AVALON_ASSET and AVALON_PROJECT values should exist in your environment)
+If you would like to test specific bundle add these:
+```
+os.environ["AYON_USE_DEV"] = "1"
+os.environ["AYON_BUNDLE_NAME"] = "YOUR_DEV_BUNDLE"
+```
+
+You might also like to add this if you would like to use Local Settings for particular site:
+```
+os.environ["AYON_SITE_ID"] = "YOUR_SITE_ID"
+```
 
 This might be enough to run your test file separately. Do not commit this skeleton though.
 Use only when you know what you are doing!

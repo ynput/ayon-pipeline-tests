@@ -1,4 +1,4 @@
-Integration test for OpenPype
+Integration test for AYON
 =============================
 Contains end-to-end tests for automatic testing of OP.
 
@@ -12,11 +12,11 @@ How to run
 ----------
 - activate `{AYON_ROOT}/.venv`
 - run in cmd
-`{AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py runtests {AYON_ROOT}/tests/integration`
+`{AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py addon pipeline_tests runtests {AYON_ROOT}/tests/integration`
   - add `hosts/APP_NAME` after integration part to limit only on specific app (eg. `{AYON_ROOT}/tests/integration/hosts/maya`)
 
 OR can use built executables
-`openpype_console runtests {ABS_PATH}/tests/integration`
+`ayon_console addon pipeline_tests runtests {ABS_PATH}/tests/integration`
 
 Command line arguments
 ----------------------
@@ -28,14 +28,12 @@ Command line arguments
  - "--app_group" - "Provide specific app group for test, empty for default",
  - "--timeout" - "Provide specific timeout value for test case",
  - "--setup_only" - "Only create dbs, do not run tests",
- - "--mongo_url" - "MongoDB for testing.",
- - "--dump_databases" - ("json"|"bson") export database in expected format after successful test (to output folder in temp location - which is made persistent by this, must be cleared manually)
 
 You should see only test asset and state of databases for that particular use case.
 
 How to check logs/errors from app
 --------------------------------
-Keep PERSIST to True in the class and check `test_ayon.logs` collection.
+Keep PERSIST to True in the class or via `--persist` command line.
 
 How to create test for publishing from host
 ------------------------------------------
@@ -52,27 +50,10 @@ How to create test for publishing from host
 - `startup_scripts` - must contain pointing host to startup script saved into `test_data/input/startup`
   -- Script must contain something like (pseudocode)
 ```
-import openpype
-from avalon import api, HOST
-
-from openpype.api import Logger
-
-log = Logger().get_logger(__name__)
-
-api.install(HOST)
-log_lines = []
-for result in pyblish.util.publish_iter():
-    for record in result["records"]:  # for logging to test_openpype DB
-        log_lines.append("{}: {}".format(
-            result["plugin"].label, record.msg))
-
-    if result["error"]:
-        err_fmt = "Failed {plugin.__name__}: {error} -- {error.traceback}"
-        log.error(err_fmt.format(**result))
-
-EXIT_APP (command to exit host)
+import pyblish.util
+pyblish.util.publish()
 ```
-(Install and publish methods must be triggered only AFTER host app is fully initialized!)
+
 - If you would like add any command line arguments for your host app add it to `test_data/input/app_args/app_args.json` (as a json list)
 - Provide any required environment variables to `test_data/input/env_vars/env_vars.json` (as a json dictionary)
 - Implement any assert checks you need in extended class
