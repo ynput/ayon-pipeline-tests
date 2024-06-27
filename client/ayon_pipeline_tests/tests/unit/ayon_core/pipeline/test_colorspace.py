@@ -17,8 +17,8 @@ import pytest
 import shutil
 import os
 
-from tests.unit.openpype.pipeline.lib import TestPipeline
-from openpype.pipeline import colorspace
+from ayon_pipeline_tests.tests.unit.ayon_core.pipeline.lib import TestPipeline
+from ayon_core.pipeline import colorspace
 
 
 class TestPipelineColorspace(TestPipeline):
@@ -26,7 +26,7 @@ class TestPipelineColorspace(TestPipeline):
 
     Example:
         cd to OpenPype repo root dir
-        poetry run python ./start.py runtests <openpype_root>/tests/unit/openpype/pipeline/test_colorspace.py
+        poetry run python ./start.py runtests <AYON_ROOT>/tests/unit/openpype/pipeline/test_colorspace.py
     """  # noqa: E501
 
     TEST_FILES = [
@@ -88,7 +88,7 @@ class TestPipelineColorspace(TestPipeline):
         dest_dir = os.path.join(
             output_folder_url,
             self.PROJECT,
-            self.ASSET,
+            self.FOLDER_PATH,
             "config"
         )
         dest_path = os.path.join(

@@ -27,10 +27,10 @@ import os
 
 
 if not os.environ.get("IS_TEST"):  # running tests from cmd or CI
-    os.environ["OPENPYPE_MONGO"] = "mongodb://localhost:27017"
-    os.environ["AVALON_DB"] = "avalon"
-    os.environ["OPENPYPE_DATABASE_NAME"] = "openpype"
-    os.environ["AVALON_TIMEOUT"] = '3000'
-    os.environ["OPENPYPE_DEBUG"] = "1"
-    os.environ["AVALON_ASSET"] = "test_asset"
-    os.environ["AVALON_PROJECT"] = "test_project"
+    import os
+
+    os.environ["USE_AYON_SERVER"] = "1"
+    os.environ["AYON_SERVER_URL"] = "http://localhost:5000"
+    os.environ["AYON_API_KEY"] = "XXXXXX"
+    os.environ["AYON_PROJECT_NAME"] = "ayon_test"
+    os.environ["AYON_FOLDER_PATH"] = "/assets/characters/characterA"

@@ -1,6 +1,6 @@
 import pytest
 
-from openpype.hosts.photoshop.lib import clean_subset_name
+from ayon_photoshop.lib import clean_subset_name
 
 """
 Tests cleanup of unused layer placeholder ({layer}) from subset name.

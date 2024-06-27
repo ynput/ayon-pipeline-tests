@@ -24,25 +24,25 @@ class TestModuleApi(ModuleUnitTest):
                    "test_site_operations.zip", '')]
 
     @pytest.fixture(scope="module")
-    def setup_sync_server_module(self, dbcon):
+    def setup_sitesync_addon(self):
         """Get sync_server_module from ModulesManager"""
-        from openpype.modules import ModulesManager
+        from ayon_core.addon import AddonsManager
 
-        manager = ModulesManager()
-        sync_server = manager.modules_by_name["sync_server"]
-        yield sync_server
+        manager = AddonsManager()
+        sitesync = manager.addons_by_name["sitesync"]
+        yield sitesync
 
-    def test_get_alt_site_pairs(self, setup_sync_server_module):
+    def test_get_alt_site_pairs(self, setup_sitesync_addon):
         conf_sites = {"SFTP": {"alternative_sites": ["studio"]},
                       "studio2": {"alternative_sites": ["studio"]}}
 
-        ret = setup_sync_server_module._get_alt_site_pairs(conf_sites)
+        ret = setup_sitesync_addon._get_alt_site_pairs(conf_sites)
         expected = {"SFTP": {"studio", "studio2"},
                     "studio": {"SFTP", "studio2"},
                     "studio2": {"studio", "SFTP"}}
         assert ret == expected, "Not matching result"
 
-    def test_get_alt_site_pairs_deep(self, setup_sync_server_module):
+    def test_get_alt_site_pairs_deep(self, setup_sitesync_addon):
         conf_sites = {"A": {"alternative_sites": ["C"]},
                       "B": {"alternative_sites": ["C"]},
                       "C": {"alternative_sites": ["D"]},
@@ -51,7 +51,7 @@ class TestModuleApi(ModuleUnitTest):
                       "G": {"alternative_sites": ["F"]},
                       }
 
-        ret = setup_sync_server_module._get_alt_site_pairs(conf_sites)
+        ret = setup_sitesync_addon._get_alt_site_pairs(conf_sites)
         expected = {"A": {"B", "C", "D"},
                     "B": {"A", "C", "D"},
                     "C": {"A", "B", "D"},

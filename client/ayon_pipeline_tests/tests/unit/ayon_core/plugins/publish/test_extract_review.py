@@ -1,4 +1,4 @@
-from openpype.plugins.publish.extract_review import ExtractReview
+from ayon_core.plugins.publish.extract_review import ExtractReview
 
 
 def test_fix_ffmpeg_full_args_filters():

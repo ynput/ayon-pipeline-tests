@@ -18,9 +18,9 @@ import pytest
 import shutil
 import logging
 
-from ayon_pipeline_tests.tests.unit.openpype.pipeline.lib import TestPipeline
-from openpype.pipeline.publish import publish_plugins
-from openpype.pipeline import colorspace
+from ayon_pipeline_tests.tests.unit.ayon_core.pipeline.lib import TestPipeline
+from ayon_core.pipeline.publish import publish_plugins
+from ayon_core.pipeline import colorspace
 
 log = logging.getLogger(__name__)
 
