@@ -6,22 +6,26 @@ Requirements:
 
 Structure:
 - integration - end to end tests, slow (see README.md in the integration folder for more info)
-    - openpype/modules/MODULE_NAME - structure follow directory structure in code base
-        - fixture - sample data `(MongoDB dumps, test files etc.)`
-        - `tests.py` - single or more pytest files for MODULE_NAME
-- unit - quick unit test
-    - MODULE_NAME
-        - fixture
-        - `tests.py`
+- unit - quick unit tests
+    - addons
+        - ADDON_NAME
+            - fixture
+            - `tests.py`
 
 How to run
 ----------
+If you like to run your tests inside of Tray, this addon provides command line argument that let Tray start and setup environments
+and then you can run your tests.
+
+Running from code:
+-----------------
 - activate `{AYON_ROOT}/.venv`
 - run in cmd
 `{AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py addon pipeline_tests runtests {AYON_ROOT}/tests/integration`
   - add `hosts/APP_NAME` after integration part to limit only on specific app (eg. `{AYON_ROOT}/tests/integration/hosts/maya`)
 
-OR can use built executables
+Running from build:
+------------------
 `ayon_console addon pipeline_tests runtests {ABS_PATH}/tests/integration`
 
 Run in IDE:
@@ -48,6 +52,11 @@ You might also like to add this if you would like to use Local Settings for part
 ```
 os.environ["AYON_SITE_ID"] = "YOUR_SITE_ID"
 ```
+
+If your tests are depending on some dependencies, you need to add them to sys.path.
+Please locate your unzipped dependency package (eg. you must run Tray at least once to pull dependency package from server).
+Packages should be in your `AppData`:
+`c:/Users/YOUR_USER/AppData/Local/Ynput/AYON/dependency_packages`
 
 This might be enough to run your test file separately. Do not commit this skeleton though.
 Use only when you know what you are doing!
