@@ -17,6 +17,9 @@ How to run
 If you like to run your tests inside of Tray, this addon provides command line argument that let Tray start and setup environments
 and then you can run your tests.
 
+Tests for your addon require that your addon is enabled in a bundle on the AYON server. It might be production or DEV (recommended) bundle.
+DEV bundle allows you to point code to specific location, that way you don't need to re-upload new version of addons to server again and again.
+
 Running from code:
 -----------------
 - activate `{AYON_ROOT}/.venv`
@@ -56,7 +59,11 @@ os.environ["AYON_SITE_ID"] = "YOUR_SITE_ID"
 If your tests are depending on some dependencies, you need to add them to sys.path.
 Please locate your unzipped dependency package (eg. you must run Tray at least once to pull dependency package from server).
 Packages should be in your `AppData`:
-`c:/Users/YOUR_USER/AppData/Local/Ynput/AYON/dependency_packages`
+```
+import sys
+sys.path.insert(0, "c:/Users/YOUR_USER/AppData/Local/Ynput/AYON/dependency_packages/ayon_2404151401_windows.zip/runtime")
+sys.path.insert(0, "c:/Users/YOUR_USER/AppData/Local/Ynput/AYON/dependency_packages/ayon_2404151401_windows.zip/dependencies")
+```
 
 This might be enough to run your test file separately. Do not commit this skeleton though.
 Use only when you know what you are doing!
