@@ -20,7 +20,7 @@ class MayaHostFixtures(HostFixtures):
             download_test_data,
             "input",
             "workfile",
-            "test_project_test_asset_test_task_v001.ma"
+            "tp_test_asset_test_task_v001.ma"
         )
         dest_folder = os.path.join(
             output_folder_url,
@@ -33,7 +33,7 @@ class MayaHostFixtures(HostFixtures):
         os.makedirs(dest_folder)
 
         dest_path = os.path.join(
-            dest_folder, "test_project_test_asset_test_task_v001.ma"
+            dest_folder, "tp_test_asset_test_task_v001.ma"
         )
         shutil.copy(src_path, dest_path)
 

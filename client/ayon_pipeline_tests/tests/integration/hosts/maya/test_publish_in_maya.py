@@ -1,8 +1,12 @@
 import re
 import os
 
+import ayon_api
+
 from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
-from ayon_pipeline_tests.tests.integration.hosts.maya.lib import MayaLocalPublishTestClass
+from ayon_pipeline_tests.tests.integration.hosts.maya.lib import (
+    MayaLocalPublishTestClass
+)
 
 
 class TestPublishInMaya(MayaLocalPublishTestClass):
@@ -40,7 +44,6 @@ class TestPublishInMaya(MayaLocalPublishTestClass):
 
     def test_publish(
         self,
-        dbcon,
         publish_finished,
         download_test_data
     ):
@@ -64,42 +67,82 @@ class TestPublishInMaya(MayaLocalPublishTestClass):
         matches = re.findall(error_regex, logging_output)
         assert not matches, matches[0][0]
 
-    def test_db_asserts(self, dbcon, publish_finished):
+    def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
         print("test_db_asserts")
         failures = []
-        failures.append(DBAssert.count_of_types(dbcon, "version", 2))
+        project_name = self.PROJECT
+
+        versions = list(ayon_api.get_versions(project_name))
 
         failures.append(
-            DBAssert.count_of_types(dbcon, "version", 0, name={"$ne": 1}))
+            DBAssert.count_compare(
+                "versions",
+                versions,
+                2
+            )
+        )
 
+        not_first_version = [version
+                             for version in versions
+                             if version["version"] != 1]
         failures.append(
-            DBAssert.count_of_types(dbcon, "subset", 1,
-                                    name="modelMain"))
+            DBAssert.count_compare(
+                "versions",
+                not_first_version,
+                0
+            )
+        )
 
+        products = ayon_api.get_products(project_name)
+        failures.append(DBAssert.count_compare("products", products, 2))
+
+        products = ayon_api.get_products(project_name,
+                                         product_names=["modelMain"])
+        failures.append(DBAssert.count_compare("model products", products, 1))
+
+        products = ayon_api.get_products(project_name,
+                                         product_names=["workfileTest_task"])
+        failures.append(DBAssert.count_compare("wfile products", products, 1))
+
+        representations = list(ayon_api.get_representations(project_name))
         failures.append(
-            DBAssert.count_of_types(dbcon, "subset", 1,
-                                    name="workfileTest_task"))
+            DBAssert.count_compare(
+                "representations",
+                representations,
+                3
+            )
+        )
 
-        failures.append(DBAssert.count_of_types(dbcon, "representation", 5))
-
-        additional_args = {"context.subset": "modelMain",
-                           "context.ext": "abc"}
+        workfile_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "workfileTest_task" and
+               repre["context"]["ext"] == "ma"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 2,
-                                    additional_args=additional_args))
+            DBAssert.count_compare(
+                "workfile representations", workfile_repres, 1))
 
-        additional_args = {"context.subset": "modelMain",
-                           "context.ext": "ma"}
+        abc_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "modelMain" and
+               repre["context"]["ext"] == "abc"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 2,
-                                    additional_args=additional_args))
+            DBAssert.count_compare(
+                "abc representations", abc_repres, 1))
 
-        additional_args = {"context.subset": "workfileTest_task",
-                           "context.ext": "ma"}
+        ma_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "modelMain" and
+               repre["context"]["ext"] == "ma"
+        ]
         failures.append(
-            DBAssert.count_of_types(dbcon, "representation", 1,
-                                    additional_args=additional_args))
+            DBAssert.count_compare(
+                "abc representations", ma_repres, 1))
 
         assert not any(failures)
 
