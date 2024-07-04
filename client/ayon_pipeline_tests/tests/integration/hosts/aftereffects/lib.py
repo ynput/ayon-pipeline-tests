@@ -20,7 +20,7 @@ class AEHostFixtures(HostFixtures):
         src_path = os.path.join(download_test_data,
                                 "input",
                                 "workfile",
-                                "test_project_test_asset_test_task_v001.aep")
+                                "tp_test_asset_test_task_v001.aep")
         dest_folder = os.path.join(output_folder_url,
                                    self.PROJECT,
                                    self.FOLDER_PATH.strip("/"),
@@ -28,7 +28,7 @@ class AEHostFixtures(HostFixtures):
                                    self.TASK)
         os.makedirs(dest_folder)
         dest_path = os.path.join(dest_folder,
-                                 "test_project_test_asset_test_task_v001.aep")
+                                 "tp_test_asset_test_task_v001.aep")
         shutil.copy(src_path, dest_path)
 
         yield dest_path
