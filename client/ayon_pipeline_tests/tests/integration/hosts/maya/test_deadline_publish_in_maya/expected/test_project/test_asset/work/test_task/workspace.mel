@@ -8,3 +8,4 @@ workspace -fr "alembicCache" "cache/alembic";
 workspace -fr "renderData" "renderData";
 workspace -fr "sourceImages" "sourceimages";
 workspace -fr "fileCache" "cache/nCache";
+workspace -fr "autoSave" "autosave";

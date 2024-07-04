@@ -1,23 +1,23 @@
-//Maya ASCII 2020 scene
+//Maya ASCII 2024 scene
 //Name: modelMain.ma
-//Last modified: Mon, Oct 24, 2022 02:57:47 PM
+//Last modified: Thu, Jul 04, 2024 12:53:35 PM
 //Codeset: 1252
-requires maya "2020";
-requires "mtoa" "4.1.1";
+requires maya "2024";
+requires "mtoa" "5.3.0";
 currentUnit -l centimeter -a degree -t pal;
 fileInfo "application" "maya";
-fileInfo "product" "Maya 2020";
-fileInfo "version" "2020";
-fileInfo "cutIdentifier" "202011110415-b1e20b88e2";
-fileInfo "osv" "Microsoft Windows 10 Technical Preview  (Build 19044)\n";
-fileInfo "UUID" "A787A358-4FE7-6E55-0C81-61BFEB0C2726";
+fileInfo "product" "Maya 2024";
+fileInfo "version" "2024";
+fileInfo "cutIdentifier" "202302170737-4500172811";
+fileInfo "osv" "Windows 11 Home v2009 (Build: 22631)";
+fileInfo "UUID" "2CE26D12-4FB2-6FF7-1C38-3EBF6C3D93FD";
 createNode transform -n "model_GRP";
 	rename -uid "445FDC20-4A9D-2C5B-C7BD-F98F6E660B5C";
 	setAttr ".rlio[0]" 1 yes 0;
 createNode transform -n "pSphere1_GEO" -p "model_GRP";
 	rename -uid "7445A43F-444F-B2D3-4315-2AA013D2E0B6";
 	addAttr -ci true -sn "cbId" -ln "cbId" -dt "string";
-	setAttr ".cbId" -type "string" "60df31e2be2b48bd3695c056:302a4c6123a4";
+	setAttr ".cbId" -type "string" "16fb36c016c711efbdec3bceaf68601a:698c554bd193";
 createNode mesh -n "pSphere1_GEOShape1" -p "pSphere1_GEO";
 	rename -uid "7C731260-45C6-339E-07BF-359446B08EA1";
 	addAttr -ci true -sn "cbId" -ln "cbId" -dt "string";
@@ -344,7 +344,7 @@ createNode mesh -n "pSphere1_GEOShape1" -p "pSphere1_GEO";
 		 361 381 1 362 381 1 363 381 1 364 381 1 365 381 1 366 381 1 367 381 1 368 381 1 369 381 1
 		 370 381 1 371 381 1 372 381 1 373 381 1 374 381 1 375 381 1 376 381 1 377 381 1 378 381 1
 		 379 381 1;
-	setAttr -s 400 -ch 1560 ".fc[0:399]" -type "polyFaces"
+	setAttr -s 400 -ch 1560 ".fc[0:399]" -type "polyFaces" 
 		f 4 0 381 -21 -381
 		mu 0 4 0 1 22 21
 		f 4 1 382 -22 -382
@@ -1151,7 +1151,7 @@ createNode mesh -n "pSphere1_GEOShape1" -p "pSphere1_GEO";
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".dr" 1;
 	setAttr ".ai_translator" -type "string" "polymesh";
-	setAttr ".cbId" -type "string" "60df31e2be2b48bd3695c056:6c77a15a98a9";
+	setAttr ".cbId" -type "string" "16fb36c016c711efbdec3bceaf68601a:e56da4efe5f1";
 select -ne :time1;
 	setAttr ".o" 1001;
 	setAttr ".unw" 1001;
@@ -1160,7 +1160,9 @@ select -ne :hardwareRenderingGlobals;
 	setAttr ".otfva" -type "Int32Array" 22 0 1 1 1 1 1
 		 1 1 1 0 0 0 0 0 0 0 0 0
 		 0 0 0 0 ;
+	setAttr ".dli" 1;
 	setAttr ".fprt" yes;
+	setAttr ".rtfm" 1;
 select -ne :renderPartition;
 	setAttr -s 2 ".st";
 select -ne :renderGlobalsList1;
@@ -1171,6 +1173,11 @@ select -ne :postProcessList1;
 select -ne :defaultRenderingList1;
 	setAttr -s 2 ".r";
 select -ne :lightList1;
+select -ne :standardSurface1;
+	setAttr ".b" 0.80000001192092896;
+	setAttr ".bc" -type "float3" 1 1 1 ;
+	setAttr ".s" 0.20000000298023224;
+	setAttr ".sr" 0.40000000596046448;
 select -ne :initialShadingGroup;
 	setAttr -s 2 ".dsm";
 	setAttr ".ro" yes;
@@ -1183,7 +1190,7 @@ select -ne :defaultRenderGlobals;
 	setAttr ".imfkey" -type "string" "exr";
 	setAttr ".an" yes;
 	setAttr ".fs" 1001;
-	setAttr ".ef" 1001;
+	setAttr ".ef" 1010;
 	setAttr ".oft" -type "string" "";
 	setAttr ".pff" yes;
 	setAttr ".ifp" -type "string" "<Scene>/<RenderLayer>/<RenderLayer>_<RenderPass>";
@@ -1201,6 +1208,17 @@ select -ne :defaultResolution;
 	setAttr ".pa" 1;
 	setAttr ".dar" 1.7777777910232544;
 select -ne :defaultLightSet;
+select -ne :defaultColorMgtGlobals;
+	setAttr ".cfe" yes;
+	setAttr ".cfp" -type "string" "<MAYA_RESOURCES>/OCIO-configs/Maya-legacy/config.ocio";
+	setAttr ".vtn" -type "string" "sRGB gamma (legacy)";
+	setAttr ".vn" -type "string" "sRGB gamma";
+	setAttr ".dn" -type "string" "legacy";
+	setAttr ".wsn" -type "string" "scene-linear Rec 709/sRGB";
+	setAttr ".ovt" no;
+	setAttr ".povt" no;
+	setAttr ".otn" -type "string" "sRGB gamma (legacy)";
+	setAttr ".potn" -type "string" "sRGB gamma (legacy)";
 select -ne :hardwareRenderGlobals;
 	setAttr ".ctrs" 256;
 	setAttr ".btrs" 512;
