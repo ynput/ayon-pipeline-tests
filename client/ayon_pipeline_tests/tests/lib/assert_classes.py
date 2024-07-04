@@ -6,16 +6,12 @@ class DBAssert:
     def count_compare(cls, queried_label, iterable, expected):
         msg = None
         no_of_docs = len(list(iterable))
+
+        status = f"successful."
         if expected != no_of_docs:
-            msg = "Not expected no of '{}'."\
-                  "Expected {}, found {}".format(queried_label,
-                                                 expected, no_of_docs)
+            msg = "Expected {}, found {}".format(expected, no_of_docs)
+            status = f"failed. {msg}"
 
-        status = "successful"
-        if msg:
-            status = "failed"
-
-        print("Comparing count of {} {}".format(queried_label,
-                                                status))
+        print("Comparing count of {} {}".format(queried_label, status))
 
         return msg
