@@ -20,14 +20,14 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
 
     Test zip file sets 3 required env vars:
     - HEADLESS_PUBLISH - this triggers publish immediately app is open
-    - IS_TEST - this differentiate between regular webpublish
+    - AYON_IN_TESTS - this differentiate between regular webpublish
     - PYBLISH_TARGETS
 
     Always pulls and uses test data from GDrive!
 
     Test zip file sets 3 required env vars:
     - HEADLESS_PUBLISH - this triggers publish immediately app is open
-    - IS_TEST - this differentiate between regular webpublish
+    - AYON_IN_TESTS - this differentiate between regular webpublish
     - PYBLISH_TARGETS
 
     Then checks content of DB (if product, version, representations were
