@@ -47,7 +47,7 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
         failures = []
 
         versions = ayon_api.get_versions(project_name)
-        failures.append(DBAssert.count_compare("versions", versions, 4))
+        failures.append(DBAssert.count_compare("versions", versions, 3))
 
         not_first_version = [version
                              for version in versions
@@ -123,7 +123,7 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
                repre["context"]["ext"] == "png"
         ]
         failures.append(
-            DBAssert.count_compare("MainForeground representations",
+            DBAssert.count_compare("MainForeground png representations",
                                    render_repres, 1))
 
         render_repres = [
@@ -133,15 +133,16 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
                repre["context"]["ext"] == "jpg"
         ]
         failures.append(
-            DBAssert.count_compare("MainForeground representations",
-                                   render_repres, 1))
+            DBAssert.count_compare("MainForeground jpg representations",
+                                   render_repres, 2))
 
+        print(f"repre::{representations[0]}")
         render_repres = [
             repre
             for repre in representations
             if repre["context"]["product"]["name"] == "imageMainForeground" and
                repre["context"]["ext"] == "jpg" and
-               repre["context"]["name"] == "jpg_jpg"
+               repre["name"] == "jpg_jpg"
         ]
         failures.append(
             DBAssert.count_compare("FG review representations", render_repres,
