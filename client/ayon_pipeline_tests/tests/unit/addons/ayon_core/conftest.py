@@ -26,7 +26,7 @@ test, it should only that folder.
 import os
 
 
-if not os.environ.get("IS_TEST"):  # running tests from cmd or CI
+if not os.environ.get("AYON_IN_TESTS"):  # running tests from cmd or CI
     import os
 
     os.environ["USE_AYON_SERVER"] = "1"
