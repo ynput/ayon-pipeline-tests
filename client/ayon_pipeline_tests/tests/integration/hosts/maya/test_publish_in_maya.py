@@ -79,18 +79,18 @@ class TestPublishInMaya(MayaLocalPublishTestClass):
             DBAssert.count_compare(
                 "versions",
                 versions,
-                2
+                3
             )
         )
 
-        not_first_version = [version
-                             for version in versions
-                             if version["version"] != 1]
+        hero_version = [version
+                        for version in versions
+                        if version["version"] == -1]
         failures.append(
             DBAssert.count_compare(
                 "versions",
-                not_first_version,
-                0
+                hero_version,
+                1
             )
         )
 
@@ -105,12 +105,13 @@ class TestPublishInMaya(MayaLocalPublishTestClass):
                                          product_names=["workfileTest_task"])
         failures.append(DBAssert.count_compare("wfile products", products, 1))
 
+        # 2 (model) + 2 (hero) + 1 workfile
         representations = list(ayon_api.get_representations(project_name))
         failures.append(
             DBAssert.count_compare(
                 "representations",
                 representations,
-                3
+                5
             )
         )
 
@@ -132,7 +133,7 @@ class TestPublishInMaya(MayaLocalPublishTestClass):
         ]
         failures.append(
             DBAssert.count_compare(
-                "abc representations", abc_repres, 1))
+                "abc representations", abc_repres, 2))
 
         ma_repres = [
             repre
@@ -142,7 +143,7 @@ class TestPublishInMaya(MayaLocalPublishTestClass):
         ]
         failures.append(
             DBAssert.count_compare(
-                "abc representations", ma_repres, 1))
+                "abc representations", ma_repres, 2))
 
         assert not any(failures)
 
