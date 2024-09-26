@@ -2,8 +2,6 @@ import os
 from ayon_core.addon import (
     click_wrap,
     AYONAddon,
-    IPluginPaths,
-    ITrayAddon
 )
 
 MY_STUDIO_ADDON_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -20,9 +18,20 @@ class PipelineTestsAddon(AYONAddon):
         click_group.add_command(cli_main.to_click_obj())
 
     @classmethod
-    def run_tests(cls, folder, mark, pyargs,
-                  test_data_folder, persist, app_variant, timeout, setup_only,
-                  mongo_url, app_group, dump_databases):
+    def run_tests(
+        cls,
+        folder,
+        mark,
+        pyargs,
+        test_data_folder,
+        persist,
+        app_variant,
+        timeout,
+        setup_only,
+        mongo_url,
+        app_group,
+        dump_databases
+    ):
         """
         Runs tests from 'folder'
 
@@ -92,7 +101,7 @@ class PipelineTestsAddon(AYONAddon):
 
         print("run_tests args: {}".format(args))
         import pytest
-        pytest.main(args)
+        return pytest.main(args)
 
 
 @click_wrap.group(
@@ -144,6 +153,19 @@ def cli_main():
 def runtests(folder, mark, pyargs, test_data_folder, persist, app_variant,
              timeout, setup_only, mongo_url, app_group, dump_databases):
     """Run all automatic tests after proper initialization via start.py"""
-    PipelineTestsAddon.run_tests(folder, mark, pyargs, test_data_folder,
-                         persist, app_variant, timeout, setup_only,
-                         mongo_url, app_group, dump_databases)
+    return_code = PipelineTestsAddon.run_tests(
+        folder,
+        mark,
+        pyargs,
+        test_data_folder,
+        persist,
+        app_variant,
+        timeout,
+        setup_only,
+        mongo_url,
+        app_group,
+        dump_databases
+    )
+
+    if bool(return_code):
+        raise RuntimeError("Test failed")
