@@ -89,7 +89,7 @@ class TestDeadlinePublishInNuke(NukeDeadlinePublishTestClass):
             DBAssert.count_compare(
                 "representations",
                 representations,
-                3
+                4
             )
         )
 
@@ -121,6 +121,19 @@ class TestDeadlinePublishInNuke(NukeDeadlinePublishTestClass):
         failures.append(
             DBAssert.count_compare("thumbnail representations", thumb_repres,
                                    1))
+
+        burnin_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "renderTest_taskMain" and
+               repre["name"] == "h264_mov"
+        ]
+        failures.append(
+            DBAssert.count_compare(
+                "burnin_repres representations",
+                burnin_repres,
+                1)
+        )
 
         assert not any(failures)
 
