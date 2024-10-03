@@ -43,14 +43,16 @@ class TestDeadlinePublishInMaya(MayaDeadlinePublishTestClass):
         # versions
         versions = list(ayon_api.get_versions(project_name))
 
+        # model + workfile + render + hero model
         failures.append(
             DBAssert.count_compare(
                 "versions",
                 versions,
-                3
+                4
             )
         )
 
+        # hero version is -1
         not_first_version = [version
                              for version in versions
                              if version["version"] != 1]
@@ -58,7 +60,7 @@ class TestDeadlinePublishInMaya(MayaDeadlinePublishTestClass):
             DBAssert.count_compare(
                 "versions",
                 not_first_version,
-                0
+                1
             )
         )
 
@@ -84,7 +86,7 @@ class TestDeadlinePublishInMaya(MayaDeadlinePublishTestClass):
             DBAssert.count_compare(
                 "representations",
                 representations,
-                6
+                8
             )
         )
 
@@ -106,7 +108,7 @@ class TestDeadlinePublishInMaya(MayaDeadlinePublishTestClass):
         ]
         failures.append(
             DBAssert.count_compare(
-                "abc representations", abc_repres, 1))
+                "abc representations", abc_repres, 2))
 
         ma_repres = [
             repre
@@ -116,7 +118,7 @@ class TestDeadlinePublishInMaya(MayaDeadlinePublishTestClass):
         ]
         failures.append(
             DBAssert.count_compare(
-                "abc representations", ma_repres, 1))
+                "abc representations", ma_repres, 2))
 
         exr_repres = [
             repre
