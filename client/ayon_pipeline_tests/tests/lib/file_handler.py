@@ -12,6 +12,8 @@ from abc import ABCMeta, abstractmethod
 import six
 import shutil
 import requests
+import pathlib
+import platform
 
 USER_AGENT = "AYON-launcher"
 
@@ -124,6 +126,13 @@ class LocalFileHandler(BaseFileHandler):
     @staticmethod
     def download_test_source_files(source_path, tmp_dir, filename=None):
         tmp_dir = os.path.expanduser(tmp_dir)
+
+        # handle too long paths on Windows
+        current_platform = platform.system().lower()
+        if current_platform == "windows":
+            source_path = fr"\\?\{source_path}"
+            tmp_dir = fr"\\?\{tmp_dir}"
+
         if os.path.isdir(source_path):
             shutil.copytree(source_path, tmp_dir, dirs_exist_ok=True)
         else:
