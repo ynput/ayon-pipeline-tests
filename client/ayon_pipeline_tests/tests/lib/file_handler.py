@@ -127,13 +127,12 @@ class LocalFileHandler(BaseFileHandler):
     def download_test_source_files(source_path, tmp_dir, filename=None):
         tmp_dir = os.path.expanduser(tmp_dir)
 
-        # handle too long paths on Windows
-        current_platform = platform.system().lower()
-        if current_platform == "windows":
-            source_path = fr"\\?\{source_path}"
-            tmp_dir = fr"\\?\{tmp_dir}"
-
         if os.path.isdir(source_path):
+            # handle too long paths on Windows
+            current_platform = platform.system().lower()
+            if current_platform == "windows":
+                source_path = fr"\\?\{source_path}"
+                tmp_dir = fr"\\?\{tmp_dir}"
             shutil.copytree(source_path, tmp_dir, dirs_exist_ok=True)
         else:
             file_name = os.path.basename(source_path)
