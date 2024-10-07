@@ -613,6 +613,7 @@ CREATE TABLE project_test_project.thumbnails (
     id uuid NOT NULL,
     mime character varying NOT NULL,
     data bytea NOT NULL,
+    meta JSONB NOT NULL DEFAULT '{}'::JSONB,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 ALTER TABLE ONLY project_test_project.thumbnails ALTER COLUMN data SET STORAGE EXTERNAL;
