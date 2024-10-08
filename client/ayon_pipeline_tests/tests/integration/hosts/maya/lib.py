@@ -58,7 +58,7 @@ class MayaHostFixtures(HostFixtures):
 
     @pytest.fixture(scope="module")
     def skip_compare_folders(self):
-        yield []
+        yield [".*oplock"]
 
 
 class MayaLocalPublishTestClass(MayaHostFixtures, PublishTest):
