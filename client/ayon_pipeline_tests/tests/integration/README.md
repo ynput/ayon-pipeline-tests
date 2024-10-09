@@ -45,7 +45,8 @@ How to create test for publishing from host
   - at first position, all others may be ""
 - Put workfile into `test_data/input/workfile`
 - If you require other than base DB dumps provide them to `test_data/input/dumps`
--- (Check commented code in `db_handler.py` how to dump specific DB. Currently all collections will be dumped.)
+-- (Check commented code in `db_handler.py` how to dump specific DB. Currently all collections will be dumped.
+-   OR if you have access to `ayon-docker` use there `./manage.ps1 dump test_project`)
 - Implement `last_workfile_path`
 - `startup_scripts` - must contain pointing host to startup script saved into `test_data/input/startup`
   -- Script must contain something like (pseudocode)
