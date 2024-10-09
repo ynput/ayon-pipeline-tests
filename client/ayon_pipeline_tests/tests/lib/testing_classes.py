@@ -185,6 +185,7 @@ class ModuleUnitTest(BaseTest):
 
         self._update_anatomy_roots(download_test_data)
 
+        self.update_addon_versions()
         yield db_handler
 
         if dump_databases:
@@ -198,6 +199,11 @@ class ModuleUnitTest(BaseTest):
         # persist = persist or self.PERSIST or self.is_test_failed(request)
         # if not persist:
         #     db_handler.teardown(self.TEST_DB_NAME)
+
+    def update_addon_versions(self):
+        """Implement changes of current addon version from dumped version."""
+        print("update_addon_versions")
+        pass
 
     def is_test_failed(self, request):
         return getattr(request.node, "module_test_failure", False)

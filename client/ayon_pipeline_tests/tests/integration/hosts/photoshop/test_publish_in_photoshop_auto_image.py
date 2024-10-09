@@ -13,7 +13,7 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
 
     Workfile contains 3 layers, auto image and review instances created.
 
-    Test contains updates to Settings!!!
+    Test contains updates to addon Settings!!!
 
     """
     PERSIST = True
@@ -30,6 +30,35 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
     APP_NAME = "{}/{}".format(APP_GROUP, APP_VARIANT)
 
     TIMEOUT = 120  # publish timeout
+
+    def update_addon_versions(self):
+        """Implement changes of current addon version from version in dump."""
+        old_version = "0.2.2"
+        addon_name = "photoshop"
+        project_name = self.PROJECT
+        bundles = ayon_api.get_bundles()
+
+        production_bundle = None
+        for bundle in bundles["bundles"]:
+            if bundle["name"] == bundles["productionBundle"]:
+                production_bundle = bundle
+                break
+
+        current_version = production_bundle["addons"].get(addon_name)
+
+        if not current_version:
+            raise RuntimeError(f"{addon_name} not set in production bundle")
+
+        endpoint = f"addons/{addon_name}/{old_version}/rawOverrides/{project_name}"
+        response = ayon_api.get(endpoint)
+        response.raise_for_status()
+        raw_addon_settings = response.data
+
+        if raw_addon_settings:
+            log.debug(f"Creating new settings for {current_version}")
+            endpoint = f"addons/{addon_name}/{current_version}/rawOverrides/{project_name}"
+            response = ayon_api.put(endpoint, **raw_addon_settings)
+            response.raise_for_status()
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
