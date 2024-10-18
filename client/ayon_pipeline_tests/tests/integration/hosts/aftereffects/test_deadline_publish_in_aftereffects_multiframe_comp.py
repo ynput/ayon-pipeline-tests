@@ -40,7 +40,7 @@ class TestDeadlinePublishInAfterEffectsMultiComposition(AEDeadlinePublishTestCla
     ]
 
     APP_GROUP = "aftereffects"
-    APP_VARIANT = ""
+    APP_VARIANT = "2024"
 
     APP_NAME = "{}/{}".format(APP_GROUP, APP_VARIANT)
 
