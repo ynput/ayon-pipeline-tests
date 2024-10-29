@@ -126,7 +126,7 @@ class TestDeadlinePublishInNuke(NukeDeadlinePublishTestClass):
             repre
             for repre in representations
             if repre["context"]["product"]["name"] == "renderTest_taskMain" and
-               repre["name"] == "h264_mov"
+               repre["name"] == "baking_h264_mov"
         ]
         failures.append(
             DBAssert.count_compare(
