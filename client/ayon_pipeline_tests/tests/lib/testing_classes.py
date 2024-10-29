@@ -355,6 +355,7 @@ class PublishTest(ModuleUnitTest):
         setup_only
     ):
         """Dummy fixture waiting for publish to finish"""
+        print(f"setup::{setup_only} - {self.SETUP_ONLY}")
         if setup_only or self.SETUP_ONLY:
             print("Creating only setup for test, not launching app")
             yield False
@@ -451,9 +452,14 @@ class DeadlinePublishTest(PublishTest):
             launched_app,
             download_test_data,
             timeout,
-            db_setup
+            setup_only
     ):
         """Dummy fixture waiting for publish to finish"""
+        if setup_only or self.SETUP_ONLY:
+            print("Created only setup for test, app not launched")
+            yield False
+            return
+
         import time
         time_start = time.time()
         timeout = timeout or self.TIMEOUT
