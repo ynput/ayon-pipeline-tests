@@ -62,6 +62,7 @@ class PipelineTestsAddon(AYONAddon):
             "--print",
             "-W ignore::DeprecationWarning",
             "-rP",
+            "-s",
             folder
         ]
 
