@@ -101,5 +101,5 @@ def pytest_runtest_makereport(item, call):
     while module is not None and not isinstance(module, pytest.Module):
         module = module.parent
     if module is not None:
-        if rep.when == 'call' and (rep.failed or rep.skipped):
+        if rep.failed or rep.skipped:
             module.module_test_failure = True
