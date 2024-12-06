@@ -7,8 +7,6 @@ from ayon_pipeline_tests.tests.integration.hosts.photoshop.lib import (
     PhotoshopTestClass
 )
 
-log = logging.getLogger("test_publish_in_photoshop")
-
 
 class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
     """Test for publish in Phohoshop with different review configuration.
@@ -42,7 +40,6 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
-        print("test_db_asserts")
         project_name = self.PROJECT
         failures = []
 
@@ -136,7 +133,6 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
             DBAssert.count_compare("MainForeground jpg representations",
                                    render_repres, 2))
 
-        print(f"repre::{representations[0]}")
         render_repres = [
             repre
             for repre in representations

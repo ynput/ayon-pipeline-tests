@@ -36,7 +36,6 @@ class TestDeadlinePublishInMaya(MayaDeadlinePublishTestClass):
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
-        print("test_db_asserts")
         failures = []
         project_name = self.PROJECT
 

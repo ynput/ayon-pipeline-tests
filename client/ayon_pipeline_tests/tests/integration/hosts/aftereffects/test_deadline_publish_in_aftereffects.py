@@ -6,8 +6,6 @@ from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
 from ayon_pipeline_tests.tests.integration.hosts.aftereffects.lib import (
     AEDeadlinePublishTestClass)
 
-log = logging.getLogger("test_publish_in_aftereffects")
-
 
 class TestDeadlinePublishInAfterEffects(AEDeadlinePublishTestClass):
     """Basic test case for DL publishing in AfterEffects
@@ -46,7 +44,6 @@ class TestDeadlinePublishInAfterEffects(AEDeadlinePublishTestClass):
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
-        print("test_db_asserts")
         failures = []
         project_name = self.PROJECT
 

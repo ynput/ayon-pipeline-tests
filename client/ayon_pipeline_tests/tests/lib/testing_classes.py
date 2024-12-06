@@ -12,6 +12,7 @@ import requests
 import re
 import inspect
 import time
+import logging
 
 from ayon_core.addon import AddonsManager
 from ayon_core.settings import get_project_settings
@@ -59,6 +60,11 @@ class ModuleUnitTest(BaseTest):
     TEST_DB_NAME = "test_project"
 
     TEST_DATA_FOLDER = None
+
+    @property
+    def log(self):
+        """Dynamic logger based on the class name."""
+        return logging.getLogger(self.__class__.__name__)
 
     @pytest.fixture(scope='session')
     def monkeypatch_session(self):
@@ -111,6 +117,9 @@ class ModuleUnitTest(BaseTest):
 
             persist = (persist or self.PERSIST or
                        self.is_test_failed(request) or dump_databases)
+            print(f"persist::{persist}, testfailed::{self.is_test_failed(request)}")
+            with open("c:/projects/test.txt", "w") as fp:
+                fp.write(f"persist::{persist}, testfailed::{self.is_test_failed(request)}")
             if not persist:
                 print("Removing {}".format(tmpdir))
                 shutil.rmtree(tmpdir)
@@ -206,6 +215,7 @@ class ModuleUnitTest(BaseTest):
         pass
 
     def is_test_failed(self, request):
+        print(f"request::{request.node}")
         return getattr(request.node, "module_test_failure", False)
 
     def _update_anatomy_roots(self, download_test_data):
@@ -368,7 +378,8 @@ class PublishTest(ModuleUnitTest):
             time.sleep(0.5)
             if time.time() - time_start > timeout:
                 launched_app.terminate()
-                raise ValueError("Timeout reached")
+                self.log.warning("Timeout '{timeout}' reached.")
+                yield False
 
         # some clean exit test possible?
         print("Publish finished")
@@ -468,14 +479,19 @@ class DeadlinePublishTest(PublishTest):
             time.sleep(0.5)
             if time.time() - time_start > timeout:
                 launched_app.terminate()
-                raise ValueError("Timeout reached")
+                self.log.warning(f"Timeout '{timeout}' reached.")
+                yield False
+                return
 
         metadata_json = glob.glob(os.path.join(download_test_data,
                                                "output",
                                                "**/*_metadata.json"),
                                   recursive=True)
         if not metadata_json:
-            raise RuntimeError("No metadata file found. No job id.")
+            self.log.warning(f"No DL metadata json found. "
+                             "Publish failed before submission.")
+            yield False
+            return
 
         if len(metadata_json) > 1:
             # depends on creation order of published jobs

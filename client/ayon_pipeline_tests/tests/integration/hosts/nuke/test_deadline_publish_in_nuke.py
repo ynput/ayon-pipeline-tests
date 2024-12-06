@@ -7,8 +7,6 @@ from ayon_pipeline_tests.tests.integration.hosts.nuke.lib import (
     NukeDeadlinePublishTestClass
 )
 
-log = logging.getLogger("test_publish_in_nuke")
-
 
 class TestDeadlinePublishInNuke(NukeDeadlinePublishTestClass):
     """Basic test case for publishing in Nuke
@@ -55,7 +53,6 @@ class TestDeadlinePublishInNuke(NukeDeadlinePublishTestClass):
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
-        print("test_db_asserts")
         failures = []
 
         project_name = self.PROJECT

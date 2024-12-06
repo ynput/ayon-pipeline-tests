@@ -7,8 +7,6 @@ from ayon_pipeline_tests.tests.integration.hosts.photoshop.lib import (
     PhotoshopTestClass
 )
 
-log = logging.getLogger("test_publish_in_photoshop")
-
 
 class TestPublishInPhotoshop(PhotoshopTestClass):
     """Basic test case for publishing in Photoshop
@@ -56,7 +54,6 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
-        print("test_db_asserts")
         project_name = self.PROJECT
         failures = []
 

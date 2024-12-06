@@ -54,8 +54,8 @@ class TestPublishInMaya(MayaLocalPublishTestClass):
         with open(logging_path, "r") as f:
             logging_output = f.read()
 
-        print(("-" * 50) + "LOGGING" + ("-" * 50))
-        print(logging_output)
+        self.log.info(("-" * 50) + "LOGGING" + ("-" * 50))
+        self.log.info(logging_output)
 
         # Check for pyblish errors.
         error_regex = r"pyblish \(ERROR\)((.|\n)*?)((pyblish \())"
@@ -69,7 +69,6 @@ class TestPublishInMaya(MayaLocalPublishTestClass):
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
-        print("test_db_asserts")
         failures = []
         project_name = self.PROJECT
 

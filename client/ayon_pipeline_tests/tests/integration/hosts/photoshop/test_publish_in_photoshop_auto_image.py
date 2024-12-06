@@ -5,8 +5,6 @@ import ayon_api
 from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
 from ayon_pipeline_tests.tests.integration.hosts.photoshop.lib import PhotoshopTestClass
 
-log = logging.getLogger("test_publish_in_photoshop")
-
 
 class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
     """Test for publish in Photoshop with different review configuration.
@@ -55,14 +53,13 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
         raw_addon_settings = response.data
 
         if raw_addon_settings:
-            log.debug(f"Creating new settings for {current_version}")
+            self.log.debug(f"Creating new settings for {current_version}")
             endpoint = f"addons/{addon_name}/{current_version}/rawOverrides/{project_name}"
             response = ayon_api.put(endpoint, **raw_addon_settings)
             response.raise_for_status()
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
-        print("test_db_asserts")
         project_name = self.PROJECT
         failures = []
 

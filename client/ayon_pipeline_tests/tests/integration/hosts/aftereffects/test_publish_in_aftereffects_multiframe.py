@@ -5,8 +5,6 @@ import ayon_api
 from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
 from ayon_pipeline_tests.tests.integration.hosts.aftereffects.lib import AELocalPublishTestClass
 
-log = logging.getLogger("test_publish_in_aftereffects")
-
 
 class TestPublishInAfterEffects(AELocalPublishTestClass):
     """Basic test case for publishing in AfterEffects
@@ -30,7 +28,6 @@ class TestPublishInAfterEffects(AELocalPublishTestClass):
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
-        print("test_db_asserts")
         failures = []
         project_name = self.PROJECT
 
