@@ -211,11 +211,9 @@ class ModuleUnitTest(BaseTest):
 
     def update_addon_versions(self):
         """Implement changes of current addon version from dumped version."""
-        print("update_addon_versions")
         pass
 
     def is_test_failed(self, request):
-        print(f"request::{request.node}")
         return getattr(request.node, "module_test_failure", False)
 
     def _update_anatomy_roots(self, download_test_data):
