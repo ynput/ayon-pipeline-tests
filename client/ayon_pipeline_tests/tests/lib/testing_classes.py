@@ -14,6 +14,8 @@ import inspect
 import time
 import logging
 
+import ayon_api
+
 from ayon_core.addon import AddonsManager
 from ayon_core.settings import get_project_settings
 from ayon_api import (
@@ -210,8 +212,40 @@ class ModuleUnitTest(BaseTest):
         #     db_handler.teardown(self.TEST_DB_NAME)
 
     def update_addon_versions(self):
-        """Implement changes of current addon version from dumped version."""
+        """Implement changes of current addon version from dumped version.
+
+        It is expected that testing class will override this method, where
+        it will provide values for project_name,addon_name, addon_db_version
+        and call _update_addon_versions
+        """
         pass
+        #self._update_addon_versions(project_name, addon_name, old_version)
+
+    def _update_addon_versions(
+            self, project_name,addon_name, addon_db_version):
+        """Implement changes of current addon version from dumped version."""
+        bundles = ayon_api.get_bundles()
+        production_bundle = None
+        for bundle in bundles["bundles"]:
+            if bundle["name"] == bundles["productionBundle"]:
+                production_bundle = bundle
+                break
+
+        current_version = production_bundle["addons"].get(addon_name)
+
+        if not current_version:
+            raise RuntimeError(f"{addon_name} not set in production bundle")
+
+        endpoint = f"addons/{addon_name}/{addon_db_version}/rawOverrides/{project_name}"  # noqa
+        response = ayon_api.get(endpoint)
+        response.raise_for_status()
+        raw_addon_settings = response.data
+
+        if raw_addon_settings:
+            self.log.debug(f"Creating new settings for {current_version}")
+            endpoint = f"addons/{addon_name}/{current_version}/rawOverrides/{project_name}"
+            response = ayon_api.put(endpoint, **raw_addon_settings)
+            response.raise_for_status()
 
     def is_test_failed(self, request):
         return getattr(request.node, "module_test_failure", False)
