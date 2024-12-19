@@ -936,6 +936,7 @@ COPY project_test_project.representations (id, name, version_id, files, attrib, 
 --
 
 COPY project_test_project.settings (addon_name, addon_version, variant, data) FROM stdin;
+maya	0.2.4	production	{"publish": {"ValidateRenderImageRule": {"enabled": false}}}
 \.
 
 

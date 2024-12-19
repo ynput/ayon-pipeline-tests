@@ -21,6 +21,9 @@ class TestDeadlinePublishInMaya(MayaDeadlinePublishTestClass):
         (in cmd with activated {AYON_ROOT}/.venv)
         {AYON_ROOT}/.venv/Scripts/python.exe {AYON_ROOT}/start.py addon pipeline_tests runtests ../tests/integration/hosts/maya  # noqa: E501
 
+        TODO: temporarily disabled ValidateRenderImageRule because https://github.com/ynput/ayon-maya/issues/194
+           - remove update to project_test_project.settings in DB dump
+           - remove update_addon_versions
     """
     PERSIST = False
 
@@ -33,6 +36,15 @@ class TestDeadlinePublishInMaya(MayaDeadlinePublishTestClass):
     APP_VARIANT = ""
 
     TIMEOUT = 240  # publish timeout
+
+    def update_addon_versions(self):
+        """Implement changes of current addon version from version in dump."""
+        version_stored_in_db = "0.2.4"
+        addon_name = "maya"
+        project_name = self.PROJECT
+
+        self._update_addon_versions(
+            project_name, addon_name, version_stored_in_db)
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
