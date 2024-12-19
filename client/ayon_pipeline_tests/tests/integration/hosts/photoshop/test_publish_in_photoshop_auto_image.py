@@ -1,5 +1,3 @@
-import logging
-
 import ayon_api
 
 from ayon_pipeline_tests.tests.lib.assert_classes import DBAssert
@@ -31,32 +29,12 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
 
     def update_addon_versions(self):
         """Implement changes of current addon version from version in dump."""
-        old_version = "0.2.2"
+        version_stored_in_db = "0.2.2"
         addon_name = "photoshop"
         project_name = self.PROJECT
-        bundles = ayon_api.get_bundles()
 
-        production_bundle = None
-        for bundle in bundles["bundles"]:
-            if bundle["name"] == bundles["productionBundle"]:
-                production_bundle = bundle
-                break
-
-        current_version = production_bundle["addons"].get(addon_name)
-
-        if not current_version:
-            raise RuntimeError(f"{addon_name} not set in production bundle")
-
-        endpoint = f"addons/{addon_name}/{old_version}/rawOverrides/{project_name}"
-        response = ayon_api.get(endpoint)
-        response.raise_for_status()
-        raw_addon_settings = response.data
-
-        if raw_addon_settings:
-            self.log.debug(f"Creating new settings for {current_version}")
-            endpoint = f"addons/{addon_name}/{current_version}/rawOverrides/{project_name}"
-            response = ayon_api.put(endpoint, **raw_addon_settings)
-            response.raise_for_status()
+        self._update_addon_versions(
+            project_name, addon_name, version_stored_in_db)
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
