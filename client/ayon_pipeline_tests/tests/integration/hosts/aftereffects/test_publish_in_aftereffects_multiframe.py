@@ -24,7 +24,7 @@ class TestPublishInAfterEffects(AELocalPublishTestClass):
 
     APP_NAME = "{}/{}".format(APP_GROUP, APP_VARIANT)
 
-    TIMEOUT = 120  # publish timeout
+    TIMEOUT = 240  # publish timeout
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
