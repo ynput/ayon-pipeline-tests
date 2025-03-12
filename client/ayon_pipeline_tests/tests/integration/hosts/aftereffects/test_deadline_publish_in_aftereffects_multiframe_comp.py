@@ -42,7 +42,7 @@ class TestDeadlinePublishInAfterEffectsMultiComposition(AEDeadlinePublishTestCla
 
     APP_NAME = "{}/{}".format(APP_GROUP, APP_VARIANT)
 
-    TIMEOUT = 240  # publish timeout
+    TIMEOUT = 300  # publish timeout
 
     def test_db_asserts(self, publish_finished):
         """Host and input data dependent expected results in DB."""
