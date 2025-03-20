@@ -84,7 +84,8 @@ CREATE TABLE project_test_project.activities (
     data jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    creation_order integer NOT NULL
+    creation_order integer NOT NULL,
+tags character varying[] COLLATE pg_catalog."default" NOT NULL DEFAULT ARRAY[]::character varying[]
 );
 
 
