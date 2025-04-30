@@ -478,7 +478,8 @@ CREATE TABLE project_test_project.representations (
     tags character varying[] DEFAULT ARRAY[]::character varying[] NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
-    creation_order integer NOT NULL
+    creation_order integer NOT NULL,
+    traits jsonb
 );
 
 
