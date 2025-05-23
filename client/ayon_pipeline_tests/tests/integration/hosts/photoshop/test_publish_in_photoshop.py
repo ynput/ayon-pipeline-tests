@@ -113,7 +113,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
             DBAssert.count_compare(
                 "representations",
                 representations,
-                6
+                8
             )
         )
 
@@ -150,6 +150,16 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
         render_repres = [
             repre
             for repre in representations
+            if repre["context"]["product"]["name"] == "imageMainForeground" and
+               repre["context"]["ext"] == "tga"
+        ]
+        failures.append(
+            DBAssert.count_compare("MainForeground representations",
+                                   render_repres, 1))
+
+        render_repres = [
+            repre
+            for repre in representations
             if repre["context"]["product"]["name"] == "imageMainBackground" and
                repre["context"]["ext"] == "png"
         ]
@@ -162,6 +172,16 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
             for repre in representations
             if repre["context"]["product"]["name"] == "imageMainBackground" and
                repre["context"]["ext"] == "jpg"
+        ]
+        failures.append(
+            DBAssert.count_compare("MainBackground representations",
+                                   render_repres, 1))
+
+        render_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "imageMainBackground" and
+               repre["context"]["ext"] == "tga"
         ]
         failures.append(
             DBAssert.count_compare("MainBackground representations",
