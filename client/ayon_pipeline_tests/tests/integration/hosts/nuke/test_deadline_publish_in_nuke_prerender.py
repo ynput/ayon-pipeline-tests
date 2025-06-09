@@ -87,7 +87,7 @@ class TestDeadlinePublishInNukePrerender(NukeDeadlinePublishTestClass):
             DBAssert.count_compare(
                 "representations",
                 representations,
-                2
+                3
             )
         )
 
@@ -118,7 +118,7 @@ class TestDeadlinePublishInNukePrerender(NukeDeadlinePublishTestClass):
         ]
         failures.append(
             DBAssert.count_compare("thumbnail representations", thumb_repres,
-                                   0))
+                                   1))
 
         assert not any(failures)
 
