@@ -90,7 +90,7 @@ class TestDeadlinePublishInAfterEffectsMultiComposition(AEDeadlinePublishTestCla
             DBAssert.count_compare(
                 "representations",
                 representations,
-                5
+                6
             )
         )
 
@@ -144,7 +144,7 @@ class TestDeadlinePublishInAfterEffectsMultiComposition(AEDeadlinePublishTestCla
             DBAssert.count_compare(
                 "exr representations", exr_repres, 1))
 
-        # no review for renderTest_taskMain2 >> no mp4, no thumbnail
+        # no review for renderTest_taskMain2 >> no mp4
         mp4_repres2 = [
             repre
             for repre in representations
@@ -155,6 +155,7 @@ class TestDeadlinePublishInAfterEffectsMultiComposition(AEDeadlinePublishTestCla
             DBAssert.count_compare(
                 "mp4 taskMain2 representations", mp4_repres2, 0))
 
+        # since ayon-core/pull/1251 - thumbnail will be created
         thumb_repres2 = [
             repre
             for repre in representations
@@ -163,7 +164,7 @@ class TestDeadlinePublishInAfterEffectsMultiComposition(AEDeadlinePublishTestCla
         ]
         failures.append(
             DBAssert.count_compare(
-                "thumb_repres2 representations", thumb_repres2, 0))
+                "thumb_repres2 representations", thumb_repres2, 1))
 
         assert not any(failures)
 
