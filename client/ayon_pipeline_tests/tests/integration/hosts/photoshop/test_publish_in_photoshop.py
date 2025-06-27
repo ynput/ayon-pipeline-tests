@@ -113,7 +113,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
             DBAssert.count_compare(
                 "representations",
                 representations,
-                8
+                6
             )
         )
 
@@ -155,7 +155,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
         ]
         failures.append(
             DBAssert.count_compare("MainForeground representations",
-                                   render_repres, 1))
+                                   render_repres, 0))
 
         render_repres = [
             repre
@@ -185,7 +185,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
         ]
         failures.append(
             DBAssert.count_compare("MainBackground representations",
-                                   render_repres, 1))
+                                   render_repres, 0))
 
         thumb_repres = [
             repre

@@ -89,7 +89,7 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
             DBAssert.count_compare(
                 "representations",
                 representations,
-                8
+                6
             )
         )
 

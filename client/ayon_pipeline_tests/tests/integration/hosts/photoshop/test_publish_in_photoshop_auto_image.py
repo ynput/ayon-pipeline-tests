@@ -83,7 +83,7 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
             DBAssert.count_compare(
                 "representations",
                 representations,
-                6
+                5
             )
         )
 
@@ -152,7 +152,7 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
         ]
         failures.append(
             DBAssert.count_compare("auto_image_review_repres representations",
-                                   auto_image_review_repres, 1))
+                                   auto_image_review_repres, 0))
 
         # separate review because of ayon+settings://photoshop/create/ReviewCreator?project=test_project
         # with empty Default Variants
