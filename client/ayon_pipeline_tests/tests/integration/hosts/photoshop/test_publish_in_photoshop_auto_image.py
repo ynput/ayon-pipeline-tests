@@ -83,7 +83,7 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
             DBAssert.count_compare(
                 "representations",
                 representations,
-                5
+                6
             )
         )
 
@@ -126,7 +126,7 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
             for repre in representations
             if repre["context"]["product"]["name"] == "imageBeauty" and
                repre["context"]["ext"] == "jpg" and
-               repre["name"] == "jpg_jpg"
+               repre["name"] == "png_jpg"
         ]
         failures.append(
             DBAssert.count_compare("auto image review representations",
