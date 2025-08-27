@@ -190,12 +190,29 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
         thumb_repres = [
             repre
             for repre in representations
-            if repre["context"]["product"]["name"] == "imageMainForeground" and
-               repre["name"] == "thumbnail"
+            if repre["context"]["product"]["name"] == "imageMainForeground"
+            and repre["name"] == "thumbnail"
         ]
         failures.append(
-            DBAssert.count_compare("thumbnail representations", thumb_repres,
-                                   1))
+            DBAssert.count_compare(
+                "imageMainForeground thumbnail representations",
+                thumb_repres,
+                1
+            )
+        )
+
+        thumb_repres = [
+            repre
+            for repre in representations
+            if repre["context"]["product"]["name"] == "imageBackground"
+            and repre["name"] == "thumbnail"
+        ]
+        failures.append(
+            DBAssert.count_compare(
+                "imageBackground thumbnail representations",
+                thumb_repres,
+                1)
+        )
 
         assert not any(failures)
 
