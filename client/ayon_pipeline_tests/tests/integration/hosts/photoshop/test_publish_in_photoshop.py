@@ -154,7 +154,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
                repre["context"]["ext"] == "tga"
         ]
         failures.append(
-            DBAssert.count_compare("MainForeground representations",
+            DBAssert.count_compare("MainForeground tga representations",
                                    render_repres, 0))
 
         render_repres = [
@@ -164,8 +164,8 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
                repre["context"]["ext"] == "png"
         ]
         failures.append(
-            DBAssert.count_compare("MainBackground representations",
-                                   render_repres, 2))
+            DBAssert.count_compare("MainBackground png representations",
+                                   render_repres, 1))
 
         render_repres = [
             repre
@@ -175,7 +175,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
         ]
         failures.append(
             DBAssert.count_compare("MainBackground jpg representations",
-                                   render_repres, 2))
+                                   render_repres, 1))
 
         render_repres = [
             repre
@@ -184,7 +184,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
                repre["context"]["ext"] == "tga"
         ]
         failures.append(
-            DBAssert.count_compare("MainBackground representations",
+            DBAssert.count_compare("MainBackground tga representations",
                                    render_repres, 0))
 
         thumb_repres = [
@@ -204,7 +204,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
         thumb_repres = [
             repre
             for repre in representations
-            if repre["context"]["product"]["name"] == "imageBackground"
+            if repre["context"]["product"]["name"] == "imageMainBackground"
             and repre["name"] == "thumbnail"
         ]
         failures.append(
