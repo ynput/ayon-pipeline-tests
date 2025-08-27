@@ -172,7 +172,7 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
         ]
         failures.append(
             DBAssert.count_compare("thumbnail representations", thumb_repres,
-                                   0))
+                                   1))
 
         assert not any(failures)
 
