@@ -141,7 +141,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
             repre
             for repre in representations
             if repre["context"]["product"]["name"] == "imageMainForeground" and
-               repre["context"]["name"] == "jpg"
+               repre["name"] == "jpg"
         ]
         failures.append(
             DBAssert.count_compare("MainForeground jpg representations",
@@ -171,7 +171,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
             repre
             for repre in representations
             if repre["context"]["product"]["name"] == "imageMainBackground" and
-               repre["context"]["name"] == "jpg"
+               repre["name"] == "jpg"
         ]
         failures.append(
             DBAssert.count_compare("MainBackground jpg representations",
