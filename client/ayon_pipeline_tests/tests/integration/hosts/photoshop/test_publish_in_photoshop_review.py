@@ -161,8 +161,8 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
                repre["context"]["ext"] == "jpg"
         ]
         failures.append(
-            DBAssert.count_compare("MainBackground representations",
-                                   render_repres, 1))
+            DBAssert.count_compare("MainBackground jpg representations",
+                                   render_repres, 2))
 
         thumb_repres = [
             repre
