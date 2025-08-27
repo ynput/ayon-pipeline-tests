@@ -137,8 +137,8 @@ class TestPublishInPhotoshopImageReviews(PhotoshopTestClass):
             repre
             for repre in representations
             if repre["context"]["product"]["name"] == "imageMainForeground" and
-               repre["context"]["ext"] == "jpg" and
-               repre["name"] == "jpg_jpg"
+               repre["context"]["ext"] == "png" and
+               repre["name"] == "png_jpg"
         ]
         failures.append(
             DBAssert.count_compare("FG review representations", render_repres,
