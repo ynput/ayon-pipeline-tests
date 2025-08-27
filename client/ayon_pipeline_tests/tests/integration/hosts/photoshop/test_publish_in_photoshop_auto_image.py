@@ -125,7 +125,7 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
             repre
             for repre in representations
             if repre["context"]["product"]["name"] == "imageBeauty" and
-               repre["context"]["ext"] == "jpg" and
+               repre["context"]["ext"] == "png" and
                repre["name"] == "png_jpg"
         ]
         failures.append(
