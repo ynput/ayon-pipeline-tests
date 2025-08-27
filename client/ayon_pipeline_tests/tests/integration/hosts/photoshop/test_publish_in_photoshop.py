@@ -141,10 +141,10 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
             repre
             for repre in representations
             if repre["context"]["product"]["name"] == "imageMainForeground" and
-               repre["context"]["ext"] == "jpg"
+               repre["context"]["name"] == "jpg"
         ]
         failures.append(
-            DBAssert.count_compare("MainForeground representations",
+            DBAssert.count_compare("MainForeground jpg representations",
                                    render_repres, 1))
 
         render_repres = [
@@ -171,10 +171,10 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
             repre
             for repre in representations
             if repre["context"]["product"]["name"] == "imageMainBackground" and
-               repre["context"]["ext"] == "jpg"
+               repre["context"]["name"] == "jpg"
         ]
         failures.append(
-            DBAssert.count_compare("MainBackground representations",
+            DBAssert.count_compare("MainBackground jpg representations",
                                    render_repres, 2))
 
         render_repres = [
