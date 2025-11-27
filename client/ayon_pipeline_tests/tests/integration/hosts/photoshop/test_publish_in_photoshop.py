@@ -94,7 +94,7 @@ class TestPublishInPhotoshop(PhotoshopTestClass):
         )
 
         products = ayon_api.get_products(project_name,
-                                         product_names=["review"])
+                                         product_names=["reviewTest_task"])
         failures.append(
             DBAssert.count_compare(
                 "review products",
