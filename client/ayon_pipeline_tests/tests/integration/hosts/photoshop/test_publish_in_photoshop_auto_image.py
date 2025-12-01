@@ -159,7 +159,7 @@ class TestPublishInPhotoshopAutoImage(PhotoshopTestClass):
         review_repres = [
             repre
             for repre in representations
-            if repre["context"]["product"]["name"] == "review"
+            if repre["context"]["product"]["name"] == "reviewTest_task"
         ]
         failures.append(
             DBAssert.count_compare("review_repres representations",
