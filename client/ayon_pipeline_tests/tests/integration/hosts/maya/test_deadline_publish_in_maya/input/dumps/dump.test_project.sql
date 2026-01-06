@@ -419,7 +419,10 @@ CREATE TABLE project_test_project.products (
     tags character varying[] DEFAULT ARRAY[]::character varying[] NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
-    creation_order integer NOT NULL
+    creation_order integer NOT NULL,
+    product_base_type character varying,
+    created_by character varying,
+    updated_by character varying
 );
 
 
@@ -479,7 +482,9 @@ CREATE TABLE project_test_project.representations (
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
     creation_order integer NOT NULL,
-    traits jsonb
+    traits jsonb,
+    created_by character varying,
+    updated_by character varying
 );
 
 
@@ -579,7 +584,9 @@ CREATE TABLE project_test_project.tasks (
     tags character varying[] DEFAULT ARRAY[]::character varying[] NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
-    creation_order integer NOT NULL
+    creation_order integer NOT NULL,
+    created_by character varying,
+    updated_by character varying
 );
 
 
@@ -641,7 +648,9 @@ CREATE TABLE project_test_project.versions (
     tags character varying[] DEFAULT ARRAY[]::character varying[] NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
-    creation_order integer NOT NULL
+    creation_order integer NOT NULL,
+    created_by character varying,
+    updated_by character varying
 );
 
 
