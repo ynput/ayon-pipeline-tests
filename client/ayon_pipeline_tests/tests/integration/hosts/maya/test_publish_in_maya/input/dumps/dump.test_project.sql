@@ -284,7 +284,9 @@ CREATE TABLE project_test_project.folders (
     active boolean DEFAULT true NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now(),
-    creation_order integer NOT NULL
+    creation_order integer NOT NULL,
+    created_by character varying,
+    updated_by character varying
 );
 
 
