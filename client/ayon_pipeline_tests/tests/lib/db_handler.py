@@ -4,6 +4,7 @@
 """
 import os
 import time
+import pytest
 
 import ayon_api
 
@@ -44,7 +45,10 @@ class DBHandler:
             response = ayon_api.raw_post(
                 "dbimport",
                 data=f)
-        self._wait_for_import(response)
+        if response.status_code != 200:
+            pytest.fail(f"Failed to import database {db_name} from {sql_path} - {response.text}")
+
+        self._wait_for_import(response.text)
 
     def teardown(self, db_name):
         """Drops 'db_name' if exists."""
@@ -59,14 +63,15 @@ class DBHandler:
     def _db_exists(self, db_name):
         return ayon_api.get_project(db_name)
 
-    def _wait_for_import(self, response):
+    def _wait_for_import(self, response: str) -> None:
         """Waits for event to be finished
 
         Throws:
             RuntimeError
         """
         try:
-            event_id = response.json()["eventId"]
+            import json
+            event_id = json.loads(response)["id"]
         except KeyError:
             raise RuntimeError("Dump upload failed.")
         status = "in_progress"
