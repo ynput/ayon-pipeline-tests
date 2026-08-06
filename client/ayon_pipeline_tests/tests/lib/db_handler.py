@@ -3,7 +3,6 @@
 
 """
 import os
-
 import time
 
 import ayon_api
@@ -41,12 +40,12 @@ class DBHandler:
 
         sql_path = os.path.join(dump_dir,
                                 DUMP_FILE_FORMAT.format(project_name=db_name))
-        con = ayon_api.get_server_api_connection()
-        response = con.upload_file(
-            "addons/projectimport/1.0.1/upload",  # TODO query actual version
-            sql_path,
-            request_type=ayon_api.server_api.RequestTypes.post
-        )
+        with open(sql_path, "rb") as f:
+            response = ayon_api.raw_post(
+                "api/dbimport",
+                files={
+                    os.path.dirname(sql_path): f
+                })
         self._wait_for_import(response)
 
     def teardown(self, db_name):
