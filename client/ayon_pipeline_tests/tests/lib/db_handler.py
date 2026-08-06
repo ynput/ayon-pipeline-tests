@@ -42,10 +42,8 @@ class DBHandler:
                                 DUMP_FILE_FORMAT.format(project_name=db_name))
         with open(sql_path, "rb") as f:
             response = ayon_api.raw_post(
-                "api/dbimport",
-                files={
-                    os.path.dirname(sql_path): f
-                })
+                "dbimport",
+                data=f)
         self._wait_for_import(response)
 
     def teardown(self, db_name):
