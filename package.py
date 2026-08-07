@@ -8,5 +8,4 @@ plugin_for = ["ayon_server"]
 build_command = ""
 ayon_required_addons = {
     "core": ">=0.3.0",
-    "projectimport": "1.0.1",
 }

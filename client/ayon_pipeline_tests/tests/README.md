@@ -4,6 +4,14 @@ Automatic tests for AYON
 Requirements:
 ============
 
+Environment variables:
+----------------------
+Process running tests needs to have 2 environment variables accessible:
+- AYON_SERVER_URL
+- AYON_API_KEY
+
+Without those database dump cannot be restored ('Forbidden' will be logged.).
+
 Structure:
 - integration - end to end tests, slow (see README.md in the integration folder for more info)
 - unit - quick unit tests

@@ -3,8 +3,8 @@
 
 """
 import os
-
 import time
+import pytest
 
 import ayon_api
 
@@ -41,13 +41,14 @@ class DBHandler:
 
         sql_path = os.path.join(dump_dir,
                                 DUMP_FILE_FORMAT.format(project_name=db_name))
-        con = ayon_api.get_server_api_connection()
-        response = con.upload_file(
-            "addons/projectimport/1.0.1/upload",  # TODO query actual version
-            sql_path,
-            request_type=ayon_api.server_api.RequestTypes.post
-        )
-        self._wait_for_import(response)
+        with open(sql_path, "rb") as f:
+            response = ayon_api.raw_post(
+                "dbimport",
+                data=f)
+        if response.status_code != 200:
+            pytest.fail(f"Failed to import database {db_name} from {sql_path} - {response.text}")
+
+        self._wait_for_import(response.text)
 
     def teardown(self, db_name):
         """Drops 'db_name' if exists."""
@@ -62,14 +63,15 @@ class DBHandler:
     def _db_exists(self, db_name):
         return ayon_api.get_project(db_name)
 
-    def _wait_for_import(self, response):
+    def _wait_for_import(self, response: str) -> None:
         """Waits for event to be finished
 
         Throws:
             RuntimeError
         """
         try:
-            event_id = response.json()["eventId"]
+            import json
+            event_id = json.loads(response)["id"]
         except KeyError:
             raise RuntimeError("Dump upload failed.")
         status = "in_progress"
